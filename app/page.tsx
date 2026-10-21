@@ -24,7 +24,7 @@ export default async function HomePage() {
     .single();
 
   // Check active voting events
-  const { data: activeVotes, count: voteCount } = await supabase
+  const { count: voteCount } = await supabase
     .from("voting_events")
     .select("id", { count: "exact" })
     .eq("is_active", true);
