@@ -38,8 +38,7 @@
   }
   .btn-primary:hover:not(:disabled) {
     background: linear-gradient(135deg, #D4A017, #FFD060);
-    box-shadow: 0 4px 24px rgba(212,160,23,0.4);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 28px rgba(212,160,23,0.5);
   }
 
   .btn-secondary {
@@ -125,11 +124,11 @@
     background: #ffffff;
     color: #111111;
     box-shadow: 0 2px 24px rgba(0,0,0,0.45);
-    transition: box-shadow 200ms, transform 200ms;
+    transition: box-shadow 200ms, filter 200ms;
   }
   .google-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55);
+    filter: brightness(0.97);
   }
 
   .delete-icon-btn {
