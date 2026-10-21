@@ -3,7 +3,6 @@
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import Image from "next/image";
 
 const SPLASH_EN = "NARUNTHINGAL".split("");
 
@@ -207,12 +206,12 @@ function LoginContent() {
 
       <div
         className="min-h-screen relative flex flex-col items-center justify-center px-4 overflow-hidden"
-        style={{ opacity: visible ? 1 : 0, transition: "opacity 0.8s ease" }}
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.8s ease",
+          background: "linear-gradient(175deg, #1a1200 0%, #0f0b02 18%, #090806 45%, #050403 100%)",
+        }}
       >
-        {/* Background */}
-        <Image src="/narunthingal-bg.jpg" alt="" fill className="object-cover" priority />
-        <div className="absolute inset-0" style={{ background: "rgba(8,7,6,0.80)" }} />
-
         {/* Radial glow behind card */}
         <div
           className="absolute pointer-events-none"
