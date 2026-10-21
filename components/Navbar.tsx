@@ -51,20 +51,20 @@ export default function Navbar({ email, name }: NavbarProps) {
     >
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5" onClick={() => setMenuOpen(false)}>
+        <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
           <Image
             src="/narunthingal-logo.jpg"
             alt="Narunthingal"
-            width={32}
-            height={32}
-            className="rounded-md"
+            width={30}
+            height={30}
+            className="rounded-md shrink-0"
           />
-          <span className="font-bold text-base tracking-widest uppercase" style={{ color: "#D4A017", letterSpacing: "0.15em" }}>
+          <span className="font-bold text-sm sm:text-base uppercase" style={{ color: "#D4A017", letterSpacing: "0.08em" }}>
             Narunthingal
           </span>
           {admin && (
             <span
-              className="badge text-xs px-2 py-0.5 rounded-full"
+              className="hidden sm:inline-flex badge text-xs px-2 py-0.5 rounded-full"
               style={{ background: "rgba(212,160,23,0.15)", color: "#D4A017", border: "1px solid rgba(212,160,23,0.3)" }}
             >
               Admin

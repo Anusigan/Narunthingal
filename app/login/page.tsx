@@ -106,7 +106,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
         /* Kolam SVG */
         .sp-kolam {
-          position: absolute; width: 440px; height: 440px; pointer-events: none;
+          position: absolute; width: min(440px, 90vw); height: min(440px, 90vw); pointer-events: none;
           opacity: 0; animation: spKolam 5.4s ease forwards;
         }
         @keyframes spKolam {
@@ -137,7 +137,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
         .sp-word { position: relative; z-index: 2; display: flex; gap: 0; }
         .sp-letter {
           font-family: 'Cinzel Decorative', 'Times New Roman', serif;
-          font-size: 2.4rem; font-weight: 700; letter-spacing: 0.1em;
+          font-size: clamp(1.4rem, 5.5vw, 2.4rem); font-weight: 700; letter-spacing: 0.08em;
           color: #E8B820;
           text-shadow:
             0 0 14px rgba(232,184,32,1),

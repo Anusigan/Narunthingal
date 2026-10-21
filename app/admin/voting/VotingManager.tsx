@@ -139,7 +139,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
 
             <div className="flex flex-col gap-3 mb-5">
               {electedEntries.map((entry, i) => (
-                <div key={i} className="flex gap-2 items-center">
+                <div key={i} className="flex flex-col sm:flex-row gap-2">
                   <input
                     className="input flex-1"
                     placeholder="Role (e.g. President)"
@@ -236,7 +236,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                 onChange={(e) => setNewCandidates(e.target.value)}
               />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label className="label">Voting Duration (minutes, optional)</label>
                 <input className="input" type="number" min="1" placeholder="e.g. 30"
@@ -291,7 +291,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
               : {}}
           >
             {/* Header */}
-            <div className="flex items-start justify-between gap-4 mb-5">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-lg font-semibold text-white">{event.title}</h2>
@@ -333,7 +333,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                 )}
               </div>
 
-              <div className="flex gap-2 flex-shrink-0 flex-wrap justify-end">
+              <div className="flex gap-2 flex-wrap sm:flex-shrink-0 sm:justify-end">
                 <button
                   onClick={() => openReleaseModal(event)}
                   className="btn-secondary text-sm"

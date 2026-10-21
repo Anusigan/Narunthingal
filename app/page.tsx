@@ -119,9 +119,9 @@ export default async function HomePage() {
             )}
           </div>
 
-          {/* Admin */}
+          {/* Admin — occupies full grid width, then splits into its own 3-col row */}
           {admin && (
-            <>
+            <div className="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
                   <div className="text-2xl mb-2">👥</div>
@@ -160,7 +160,7 @@ export default async function HomePage() {
                   Manage Admins
                 </Link>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

@@ -54,14 +54,14 @@ export default function AdminsManager({
       {/* Add form */}
       <div className="card">
         <h2 className="text-base font-semibold text-white mb-4">Add Admin</h2>
-        <form onSubmit={handleAdd} className="flex gap-3">
+        <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="name@iit.ac.lk"
             required
-            className="flex-1 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:ring-1"
+            className="flex-1 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:ring-1 min-w-0"
             style={{
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.12)",
@@ -97,10 +97,10 @@ export default function AdminsManager({
                 border: "1px solid rgba(255,255,255,0.08)",
               }}
             >
-              <div>
-                <p className="text-sm font-medium text-white">{admin.email}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-white truncate">{admin.email}</p>
                 {admin.added_by && (
-                  <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.35)" }}>
+                  <p className="text-xs mt-0.5 truncate" style={{ color: "rgba(245,240,232,0.35)" }}>
                     Added by {admin.added_by} · {new Date(admin.added_at).toLocaleDateString()}
                   </p>
                 )}
