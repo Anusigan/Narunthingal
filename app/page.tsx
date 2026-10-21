@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { isAdminAsync } from "@/lib/admin";
-import Image from "next/image";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -26,12 +25,14 @@ export default async function HomePage() {
     .eq("is_active", true);
 
   return (
-    <div className="min-h-screen relative">
-      {/* Background */}
-      <Image src="/narunthingal-bg.jpg" alt="" fill className="object-cover fixed" priority />
-      <div className="fixed inset-0" style={{ background: "rgba(8,7,6,0.80)" }} />
-
-      <div className="relative">
+    <div
+      className="min-h-screen"
+      style={{
+        background:
+          "radial-gradient(ellipse 90% 45% at 50% -5%, rgba(212,160,23,0.07) 0%, transparent 70%), #080706",
+      }}
+    >
+      <div>
         <Navbar email={email} name={name} />
 
         {/* Hero */}
@@ -51,7 +52,6 @@ export default async function HomePage() {
           {/* Apply */}
           <div className="card flex flex-col gap-4">
             <div>
-              <div className="text-2xl mb-2">📋</div>
               <h2 className="text-lg font-semibold text-white mb-1">Application</h2>
               <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                 Apply to join the Narunthingal organizing committee and choose your preferred role.
@@ -81,7 +81,6 @@ export default async function HomePage() {
           {/* Vote */}
           <div className="card flex flex-col gap-4">
             <div>
-              <div className="text-2xl mb-2">🗳️</div>
               <h2 className="text-lg font-semibold text-white mb-1">Voting</h2>
               <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                 Participate in active committee votes. Your IIT login ensures one vote per person.
@@ -94,7 +93,7 @@ export default async function HomePage() {
                   style={{ background: "rgba(212,160,23,0.1)", border: "1px solid rgba(212,160,23,0.25)" }}
                 >
                   <p className="font-medium" style={{ color: "#D4A017" }}>
-                    🔔 {voteCount} active vote{voteCount !== 1 ? "s" : ""}
+                    {voteCount} active vote{voteCount !== 1 ? "s" : ""}
                   </p>
                 </div>
                 <Link href="/vote" className="btn-primary text-center block">
@@ -116,7 +115,6 @@ export default async function HomePage() {
             <div className="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <div className="text-2xl mb-2">👥</div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin — Candidates</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     View, filter, sort, and search all submitted applications.
@@ -129,7 +127,6 @@ export default async function HomePage() {
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <div className="text-2xl mb-2">⚙️</div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin — Voting</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     Create voting events, manage candidates, and see live results.
@@ -142,7 +139,6 @@ export default async function HomePage() {
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <div className="text-2xl mb-2">🔑</div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin — Access</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     Add or remove admin access for other IIT email addresses.

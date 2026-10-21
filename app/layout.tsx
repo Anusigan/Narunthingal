@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Narunthingal Portal",
   description:
     "Official portal for Narunthingal organizing committee applications and voting. IIT students only.",
+  icons: { icon: "/narunthingal-logo.jpg" },
 };
 
 export default function RootLayout({
