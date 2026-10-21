@@ -1,5 +1,6 @@
 "use client";
 
+import { notifyVotingChanged } from "@/lib/votingRealtime";
 import { createClient } from "@/lib/supabase/client";
 import type { Vote, VotingEvent } from "@/lib/types";
 import { useState } from "react";
@@ -30,6 +31,7 @@ export default function VoteBallot({ event, userId, myVote }: Props) {
       candidate: selected,
     });
 
+    if (!dbErr) await notifyVotingChanged(supabase);
     setSubmitting(false);
     if (dbErr) {
       if (dbErr.code === "23505") {
@@ -41,7 +43,7 @@ export default function VoteBallot({ event, userId, myVote }: Props) {
     }
 
     setVoted(selected);
-    router.push(`/vote/results/${event.id}`);
+    router.push(`/vote/live?event=${event.id}`);
   }
 
   return (

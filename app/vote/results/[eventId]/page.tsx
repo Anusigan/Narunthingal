@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ResultsView from "./ResultsView";
+import RealtimeRefresh from "@/components/RealtimeRefresh";
 import type { VotingEvent, Vote } from "@/lib/types";
 
 export default async function VoteResultsPage({
@@ -47,6 +48,7 @@ export default async function VoteResultsPage({
   return (
     <div className="min-h-screen">
       <Navbar email={email} name={name} />
+      <RealtimeRefresh />
       <ResultsView
         event={event as VotingEvent}
         myVote={myVote as Vote}

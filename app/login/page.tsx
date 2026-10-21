@@ -4,6 +4,10 @@ import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
+// TEMPORARY: while true, Google sign-in is admin-only and the three
+// test voter accounts sign in with email + password instead.
+const TEST_MODE = process.env.NEXT_PUBLIC_TEST_MODE === "true";
+
 const SPLASH_EN = "NARUNTHINGAL".split("");
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
@@ -187,6 +191,30 @@ function LoginContent() {
     return () => clearTimeout(t);
   }, []);
 
+  const [testEmail, setTestEmail] = useState("");
+  const [testPassword, setTestPassword] = useState("");
+  const [testError, setTestError] = useState<string | null>(null);
+
+  async function signInWithPassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (signingIn) return;
+    setSigningIn(true);
+    setTestError(null);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: testEmail.trim().includes("@")
+        ? testEmail.trim()
+        : `${testEmail.trim()}@iit.ac.lk`,
+      password: testPassword,
+    });
+    if (error) {
+      setTestError(error.message);
+      setSigningIn(false);
+      return;
+    }
+    window.location.href = "/";
+  }
+
   async function signInWithGoogle() {
     if (signingIn) return;
     setSigningIn(true);
@@ -276,6 +304,39 @@ function LoginContent() {
                 </div>
               )}
 
+              {TEST_MODE && (
+                <form onSubmit={signInWithPassword} className="flex flex-col gap-3 mb-5">
+                  <p className="text-xs" style={{ color: "rgba(212,160,23,0.85)" }}>
+                    Test accounts
+                  </p>
+                  <input
+                    className="input"
+                    value={testEmail}
+                    onChange={(e) => setTestEmail(e.target.value)}
+                    placeholder="Username (e.g. testvoter1)"
+                    required
+                  />
+                  <input
+                    className="input"
+                    type="password"
+                    value={testPassword}
+                    onChange={(e) => setTestPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                  />
+                  {testError && (
+                    <p className="text-xs" style={{ color: "#fca5a5" }}>{testError}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={signingIn}
+                    className="w-full text-sm font-medium rounded-xl px-4 py-3 google-btn disabled:opacity-60"
+                  >
+                    {signingIn ? "Signing in…" : "Sign in"}
+                  </button>
+                </form>
+              )}
+
               <button
                 onClick={signInWithGoogle}
                 disabled={signingIn}
@@ -294,7 +355,7 @@ function LoginContent() {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
                 )}
-                {signingIn ? "Redirecting…" : "Continue with Google"}
+                {signingIn ? "Redirecting…" : TEST_MODE ? "Admin sign-in with Google" : "Continue with Google"}
               </button>
 
               <p

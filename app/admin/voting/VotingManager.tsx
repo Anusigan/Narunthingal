@@ -1,5 +1,6 @@
 "use client";
 
+import { notifyVotingChanged } from "@/lib/votingRealtime";
 import { createClient } from "@/lib/supabase/client";
 import type { Vote, VotingEvent } from "@/lib/types";
 import { useState } from "react";
@@ -69,6 +70,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
       update.ends_at = null;
     }
     await supabase.from("voting_events").update(update).eq("id", event.id);
+    await notifyVotingChanged(supabase);
     setBusy(null);
     router.refresh();
   }
@@ -95,6 +97,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
       .from("voting_events")
       .update({ results_released: true, elected })
       .eq("id", releasingId);
+    if (!dbErr) await notifyVotingChanged(supabase);
     setBusy(null);
     if (dbErr) return setError(dbErr.message);
     setReleasingId(null);

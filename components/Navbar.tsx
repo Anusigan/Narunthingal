@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAdmin } from "@/lib/admin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { startPresence, stopPresence } from "@/lib/presence";
 import Image from "next/image";
 
 interface NavbarProps {
@@ -19,9 +20,18 @@ export default function Navbar({ email, name }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const admin = isAdmin(email);
 
+  // Announce this signed-in user on the shared presence channel
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) startPresence(supabase, data.user);
+    });
+  }, []);
+
   async function signOut() {
     setSigning(true);
     const supabase = createClient();
+    stopPresence(supabase);
     await supabase.auth.signOut();
     router.push("/login");
   }
@@ -30,6 +40,7 @@ export default function Navbar({ email, name }: NavbarProps) {
     { href: "/", label: "Home" },
     { href: "/apply", label: "Apply" },
     { href: "/vote", label: "Vote" },
+    { href: "/vote/live", label: "Live" },
     ...(admin
       ? [
           { href: "/admin/candidates", label: "Candidates" },

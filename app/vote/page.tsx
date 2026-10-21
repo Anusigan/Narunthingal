@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import VoteBallot from "./VoteBallot";
+import RealtimeRefresh from "@/components/RealtimeRefresh";
 import type { VotingEvent, Vote } from "@/lib/types";
 
 export default async function VotePage() {
@@ -31,6 +32,7 @@ export default async function VotePage() {
   return (
     <div className="min-h-screen">
       <Navbar email={email} name={name} />
+      <RealtimeRefresh />
 
       <div className="max-w-2xl mx-auto px-4 py-10">
         <div className="mb-8">
