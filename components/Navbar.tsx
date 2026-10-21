@@ -78,14 +78,7 @@ export default function Navbar({ email, name }: NavbarProps) {
             <Link
               key={l.href}
               href={l.href}
-              className="px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-150"
-              style={
-                pathname === l.href
-                  ? { background: "rgba(212,160,23,0.15)", color: "#D4A017", border: "1px solid rgba(212,160,23,0.25)" }
-                  : { color: "rgba(245,240,232,0.5)" }
-              }
-              onMouseOver={e => { if (pathname !== l.href) { (e.currentTarget as HTMLElement).style.color = "#f5f0e8"; } }}
-              onMouseOut={e => { if (pathname !== l.href) { (e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.5)"; } }}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium ${pathname === l.href ? "nav-link-active" : "nav-link"}`}
             >
               {l.label}
             </Link>

@@ -96,4 +96,22 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(212,160,23,0.4), transparent);
   }
+
+  .nav-link {
+    color: rgba(245,240,232,0.5);
+    transition: color 150ms;
+  }
+  .nav-link:hover {
+    color: #f5f0e8;
+  }
+  .nav-link-active {
+    background: rgba(212,160,23,0.15);
+    color: #D4A017;
+    border: 1px solid rgba(212,160,23,0.25);
+  }
+
+  /* Eliminate 300ms tap delay on all interactive elements */
+  a, button, [role="button"] {
+    touch-action: manipulation;
+  }
 }
