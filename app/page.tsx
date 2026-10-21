@@ -36,17 +36,9 @@ export default async function HomePage() {
 
         {/* Hero */}
         <div className="relative max-w-4xl mx-auto px-4 pt-14 pb-10 text-center">
-          <Image
-            src="/narunthingal-logo.jpg"
-            alt="Narunthingal"
-            width={120}
-            height={120}
-            className="rounded-2xl mx-auto mb-5"
-            style={{ boxShadow: "0 0 48px rgba(212,160,23,0.45)" }}
-          />
-          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-2">
-            Organizing{" "}
-            <span style={{ color: "#D4A017" }}>Committee</span>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-1">
+            Narunthingal{" "}
+            <span style={{ color: "#D4A017" }}>&apos;27</span>
           </h1>
           <div className="gold-divider max-w-xs mx-auto my-4" />
           <p className="text-sm" style={{ color: "rgba(245,240,232,0.5)" }}>
@@ -163,6 +155,13 @@ export default async function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Footer */}
+        <footer className="relative text-center pb-8 px-4">
+          <p className="text-xs" style={{ color: "rgba(245,240,232,0.2)" }}>
+            Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
+          </p>
+        </footer>
       </div>
     </div>
   );
