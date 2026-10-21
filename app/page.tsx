@@ -29,7 +29,7 @@ export default async function HomePage() {
       className="min-h-screen"
       style={{
         background:
-          "radial-gradient(ellipse 90% 45% at 50% -5%, rgba(212,160,23,0.07) 0%, transparent 70%), #080706",
+          "linear-gradient(175deg, #1a1200 0%, #0f0b02 18%, #090806 45%, #050403 100%)",
       }}
     >
       <div>
@@ -153,9 +153,15 @@ export default async function HomePage() {
         </div>
 
         {/* Footer */}
-        <footer className="relative text-center pb-8 px-4">
-          <p className="text-xs" style={{ color: "rgba(245,240,232,0.2)" }}>
+        <footer
+          className="relative max-w-4xl mx-auto px-4 py-6 mt-4 flex items-center justify-between"
+          style={{ borderTop: "1px solid rgba(212,160,23,0.12)" }}
+        >
+          <p className="text-xs" style={{ color: "rgba(245,240,232,0.25)" }}>
             Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
+          </p>
+          <p className="text-xs" style={{ color: "rgba(212,160,23,0.35)" }}>
+            Narunthingal &apos;27
           </p>
         </footer>
       </div>
