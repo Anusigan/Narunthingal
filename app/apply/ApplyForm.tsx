@@ -278,29 +278,31 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
         >
           <div className="flex flex-col gap-2">
             {clubs.map((row, i) => (
-              <div key={i} className="flex gap-2 items-center">
+              <div key={i} className="flex flex-col sm:flex-row gap-2">
                 <input
                   className="input flex-1"
                   placeholder="Club name"
                   value={row.club}
                   onChange={(e) => updateClub(i, "club", e.target.value)}
                 />
-                <input
-                  className="input flex-1"
-                  placeholder="Your position (optional)"
-                  value={row.position}
-                  onChange={(e) => updateClub(i, "position", e.target.value)}
-                />
-                {clubs.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeClubRow(i)}
-                    className="text-xs px-2 py-1 rounded"
-                    style={{ color: "#f87171", background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)", whiteSpace: "nowrap" }}
-                  >
-                    Remove
-                  </button>
-                )}
+                <div className="flex gap-2 sm:flex-1">
+                  <input
+                    className="input flex-1"
+                    placeholder="Your position (optional)"
+                    value={row.position}
+                    onChange={(e) => updateClub(i, "position", e.target.value)}
+                  />
+                  {clubs.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeClubRow(i)}
+                      className="text-xs px-2 py-1 rounded shrink-0"
+                      style={{ color: "#f87171", background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)" }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
             <button
