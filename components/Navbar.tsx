@@ -35,6 +35,7 @@ export default function Navbar({ email, name }: NavbarProps) {
           { href: "/admin/candidates", label: "Candidates" },
           { href: "/admin/voting", label: "Manage Voting" },
           { href: "/admin/admins", label: "Manage Admins" },
+          { href: "/admin/analytics", label: "Analytics" },
         ]
       : []),
   ];
