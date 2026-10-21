@@ -30,21 +30,22 @@ export default async function ApplyPage() {
           <h1 className="text-3xl font-bold text-white">
             {existing ? "Your Application" : "Apply for a Position"}
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="mt-2 text-sm" style={{ color: "rgba(245,240,232,0.5)" }}>
             {existing
               ? "You have already submitted your application. See your responses below."
               : "Fill in the form below to apply for a position in the Narunthingal organizing committee."}
           </p>
+          <div className="gold-divider mt-4" />
         </div>
 
         {existing ? (
-          <div className="card border-emerald-900">
+          <div className="card" style={{ borderColor: "rgba(16,185,129,0.25)" }}>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-emerald-400 font-medium">
+              <div className="w-2 h-2 rounded-full" style={{ background: "#34d399" }} />
+              <span className="font-medium" style={{ color: "#34d399" }}>
                 Application received
               </span>
-              <span className="text-gray-500 text-sm ml-auto">
+              <span className="text-sm ml-auto" style={{ color: "rgba(245,240,232,0.35)" }}>
                 {new Date(existing.submitted_at).toLocaleDateString("en-GB", {
                   day: "numeric",
                   month: "long",
@@ -54,7 +55,7 @@ export default async function ApplyPage() {
             </div>
             <dl className="grid gap-3">
               <div>
-                <dt className="text-xs text-gray-500 uppercase tracking-wide">
+                <dt className="text-xs uppercase tracking-wide" style={{ color: "rgba(212,160,23,0.6)" }}>
                   First Preference
                 </dt>
                 <dd className="text-white font-semibold mt-0.5">
@@ -63,7 +64,7 @@ export default async function ApplyPage() {
               </div>
               {existing.second_preference && (
                 <div>
-                  <dt className="text-xs text-gray-500 uppercase tracking-wide">
+                  <dt className="text-xs uppercase tracking-wide" style={{ color: "rgba(212,160,23,0.6)" }}>
                     Second Preference
                   </dt>
                   <dd className="text-white mt-0.5">
@@ -72,9 +73,8 @@ export default async function ApplyPage() {
                 </div>
               )}
             </dl>
-            <p className="mt-6 text-sm text-gray-500">
-              Applications are final. Contact the admin team if you need to make
-              changes.
+            <p className="mt-6 text-sm" style={{ color: "rgba(245,240,232,0.4)" }}>
+              Applications are final. Contact the admin team if you need to make changes.
             </p>
           </div>
         ) : (

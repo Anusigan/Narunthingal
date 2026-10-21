@@ -29,9 +29,10 @@ export default async function CandidatesPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">Applications</h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-sm mt-1" style={{ color: "rgba(245,240,232,0.45)" }}>
               {applications?.length ?? 0} total submissions
             </p>
+            <div className="gold-divider mt-3" />
           </div>
         </div>
 

@@ -35,16 +35,17 @@ export default async function VotePage() {
       <div className="max-w-2xl mx-auto px-4 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white">Voting</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-sm mt-1" style={{ color: "rgba(245,240,232,0.45)" }}>
             Cast your vote in active elections. You can vote once per event.
           </p>
+          <div className="gold-divider mt-4" />
         </div>
 
         {(!events || events.length === 0) ? (
           <div className="card text-center py-14">
             <div className="text-4xl mb-3">🗳️</div>
-            <p className="text-gray-400">No active votes right now.</p>
-            <p className="text-gray-600 text-sm mt-1">
+            <p style={{ color: "rgba(245,240,232,0.5)" }}>No active votes right now.</p>
+            <p className="text-sm mt-1" style={{ color: "rgba(245,240,232,0.3)" }}>
               Check back when an event has been opened by the admins.
             </p>
           </div>

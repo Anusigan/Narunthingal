@@ -105,9 +105,9 @@ export default function ApplyForm({
   }) => (
     <div className="flex flex-col gap-1.5">
       <label className="label">
-        {label} {required && <span className="text-purple-400">*</span>}
+        {label} {required && <span style={{ color: "#D4A017" }}>*</span>}
       </label>
-      {hint && <p className="text-xs text-gray-500 -mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>{hint}</p>}
       {children}
     </div>
   );
@@ -116,7 +116,7 @@ export default function ApplyForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Personal info */}
       <div className="card flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-200 border-b border-gray-800 pb-3">
+        <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
           Personal Information
         </h2>
 
@@ -153,7 +153,7 @@ export default function ApplyForm({
 
       {/* Position preferences */}
       <div className="card flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-200 border-b border-gray-800 pb-3">
+        <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
           Position Preferences
         </h2>
 
@@ -203,7 +203,7 @@ export default function ApplyForm({
 
       {/* Experience */}
       <div className="card flex flex-col gap-5">
-        <h2 className="font-semibold text-gray-200 border-b border-gray-800 pb-3">
+        <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
           Experience & Background
         </h2>
 
@@ -220,9 +220,10 @@ export default function ApplyForm({
                   value={v}
                   checked={form.volunteered_last_year === v}
                   onChange={() => update("volunteered_last_year", v)}
-                  className="accent-purple-500 w-4 h-4"
+                  className="w-4 h-4"
+                  style={{ accentColor: "#D4A017" } as React.CSSProperties}
                 />
-                <span className="text-gray-300 capitalize">{v}</span>
+                <span className="capitalize" style={{ color: "rgba(245,240,232,0.85)" }}>{v}</span>
               </label>
             ))}
           </div>
@@ -279,7 +280,7 @@ export default function ApplyForm({
         {submitting ? "Submitting..." : "Submit Application"}
       </button>
 
-      <p className="text-xs text-gray-500 text-center">
+      <p className="text-xs text-center" style={{ color: "rgba(212,160,23,0.4)" }}>
         Applications are final once submitted. Make sure all details are
         correct.
       </p>

@@ -76,9 +76,9 @@ export default function CandidatesTable({ applications }: Props) {
   }
 
   function SortIcon({ col }: { col: SortKey }) {
-    if (sortKey !== col) return <span className="text-gray-600 ml-1">⇅</span>;
+    if (sortKey !== col) return <span className="ml-1" style={{ color: "rgba(212,160,23,0.35)" }}>&#x21C5;</span>;
     return (
-      <span className="text-purple-400 ml-1">
+      <span className="ml-1" style={{ color: "#D4A017" }}>
         {sortDir === "asc" ? "↑" : "↓"}
       </span>
     );
@@ -178,16 +178,16 @@ export default function CandidatesTable({ applications }: Props) {
         </button>
       </div>
 
-      <p className="text-sm text-gray-500">
-        Showing <span className="text-gray-300">{filtered.length}</span> of{" "}
+      <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
+        Showing <span style={{ color: "#f5f0e8" }}>{filtered.length}</span> of{" "}
         {applications.length} applications
       </p>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-800">
+      <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid rgba(212,160,23,0.18)" }}>
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-900 text-left text-gray-400 text-xs uppercase tracking-wide">
+            <tr className="text-left text-xs uppercase tracking-wide" style={{ background: "rgba(212,160,23,0.06)", color: "rgba(212,160,23,0.7)" }}>
               <th
                 className="px-4 py-3 cursor-pointer hover:text-white whitespace-nowrap"
                 onClick={() => toggleSort("name")}
@@ -217,12 +217,13 @@ export default function CandidatesTable({ applications }: Props) {
               <th className="px-4 py-3 whitespace-nowrap">Details</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-800/60">
+          <tbody style={{ borderTop: "1px solid rgba(212,160,23,0.1)" }}>
             {filtered.length === 0 && (
               <tr>
                 <td
                   colSpan={7}
-                  className="text-center text-gray-500 py-12"
+                  className="text-center py-12"
+                  style={{ color: "rgba(245,240,232,0.4)" }}
                 >
                   No applications match your filters.
                 </td>
@@ -232,39 +233,42 @@ export default function CandidatesTable({ applications }: Props) {
               <>
                 <tr
                   key={a.id}
-                  className="bg-gray-900/50 hover:bg-gray-900 transition-colors"
+                  className="transition-colors"
+                  style={{ borderBottom: "1px solid rgba(212,160,23,0.08)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(212,160,23,0.04)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                 >
                   <td className="px-4 py-3 font-medium text-white">
                     {a.name}
                   </td>
-                  <td className="px-4 py-3 text-gray-400">
-                    <div className="text-xs">{a.email}</div>
-                    <div className="text-gray-500 text-xs">
+                  <td className="px-4 py-3">
+                    <div className="text-xs" style={{ color: "rgba(245,240,232,0.6)" }}>{a.email}</div>
+                    <div className="text-xs" style={{ color: "rgba(245,240,232,0.35)" }}>
                       {a.contact_number}
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="badge bg-purple-900/60 text-purple-300 border border-purple-800">
+                    <span className="badge" style={{ background: "rgba(212,160,23,0.15)", color: "#D4A017", border: "1px solid rgba(212,160,23,0.35)" }}>
                       {a.first_preference}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-400 text-xs">
+                  <td className="px-4 py-3 text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>
                     {a.second_preference ?? (
-                      <span className="text-gray-600">—</span>
+                      <span style={{ color: "rgba(245,240,232,0.2)" }}>—</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     {a.volunteered_last_year ? (
-                      <span className="badge bg-emerald-900/60 text-emerald-400 border border-emerald-800">
+                      <span className="badge" style={{ background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)" }}>
                         Yes
                       </span>
                     ) : (
-                      <span className="badge bg-gray-800 text-gray-400">
+                      <span className="badge" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(245,240,232,0.4)" }}>
                         No
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
+                  <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: "rgba(245,240,232,0.35)" }}>
                     {new Date(a.submitted_at).toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-3">
@@ -272,7 +276,8 @@ export default function CandidatesTable({ applications }: Props) {
                       onClick={() =>
                         setExpanded(expanded === a.id ? null : a.id)
                       }
-                      className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                      className="text-xs transition-colors"
+                      style={{ color: "#D4A017" }}
                     >
                       {expanded === a.id ? "▲ Hide" : "▼ View"}
                     </button>
@@ -280,7 +285,7 @@ export default function CandidatesTable({ applications }: Props) {
                 </tr>
 
                 {expanded === a.id && (
-                  <tr key={`${a.id}-expanded`} className="bg-gray-900/80">
+                  <tr key={`${a.id}-expanded`} style={{ background: "rgba(212,160,23,0.04)" }}>
                     <td colSpan={7} className="px-6 py-5">
                       <div className="grid sm:grid-cols-2 gap-5">
                         <Detail label="Why suitable">
@@ -323,10 +328,10 @@ function Detail({
 }) {
   return (
     <div>
-      <dt className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+      <dt className="text-xs uppercase tracking-wide mb-1" style={{ color: "rgba(212,160,23,0.6)" }}>
         {label}
       </dt>
-      <dd className="text-gray-300 text-sm whitespace-pre-wrap">{children}</dd>
+      <dd className="text-sm whitespace-pre-wrap" style={{ color: "rgba(245,240,232,0.8)" }}>{children}</dd>
     </div>
   );
 }

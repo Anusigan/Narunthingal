@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { isAdmin } from "@/lib/admin";
 import { useState } from "react";
+import Image from "next/image";
 
 interface NavbarProps {
   email: string;
@@ -15,7 +16,6 @@ export default function Navbar({ email, name }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [signing, setSigning] = useState(false);
-
   const admin = isAdmin(email);
 
   async function signOut() {
@@ -38,16 +38,33 @@ export default function Navbar({ email, name }: NavbarProps) {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-gray-950/80 backdrop-blur border-b border-gray-800">
+    <nav
+      className="sticky top-0 z-50"
+      style={{
+        background: "rgba(8,7,6,0.85)",
+        backdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(212,160,23,0.2)",
+        boxShadow: "0 2px 32px rgba(0,0,0,0.5)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Brand */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-bold text-purple-400 text-lg tracking-tight"
-        >
-          <span className="text-amber-400">🌸</span> Narunthingal
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/narunthingal-logo.jpg"
+            alt="Narunthingal"
+            width={32}
+            height={32}
+            className="rounded-md"
+          />
+          <span className="font-bold text-base tracking-widest uppercase" style={{ color: "#D4A017", letterSpacing: "0.15em" }}>
+            Narunthingal
+          </span>
           {admin && (
-            <span className="badge bg-purple-900 text-purple-300 ml-1">
+            <span
+              className="badge text-xs px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(212,160,23,0.15)", color: "#D4A017", border: "1px solid rgba(212,160,23,0.3)" }}
+            >
               Admin
             </span>
           )}
@@ -59,11 +76,14 @@ export default function Navbar({ email, name }: NavbarProps) {
             <Link
               key={l.href}
               href={l.href}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              className="px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-150"
+              style={
                 pathname === l.href
-                  ? "bg-purple-900/60 text-purple-300"
-                  : "text-gray-400 hover:text-gray-100 hover:bg-gray-800"
-              }`}
+                  ? { background: "rgba(212,160,23,0.15)", color: "#D4A017", border: "1px solid rgba(212,160,23,0.25)" }
+                  : { color: "rgba(245,240,232,0.5)" }
+              }
+              onMouseOver={e => { if (pathname !== l.href) { (e.currentTarget as HTMLElement).style.color = "#f5f0e8"; } }}
+              onMouseOut={e => { if (pathname !== l.href) { (e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.5)"; } }}
             >
               {l.label}
             </Link>
@@ -72,15 +92,18 @@ export default function Navbar({ email, name }: NavbarProps) {
 
         {/* User */}
         <div className="flex items-center gap-3">
-          <span className="hidden sm:block text-xs text-gray-500 max-w-[180px] truncate">
+          <span className="hidden sm:block text-xs max-w-[180px] truncate" style={{ color: "rgba(245,240,232,0.4)" }}>
             {name ?? email}
           </span>
           <button
             onClick={signOut}
             disabled={signing}
-            className="text-xs text-gray-400 hover:text-red-400 transition-colors"
+            className="text-xs transition-colors duration-150"
+            style={{ color: "rgba(245,240,232,0.4)" }}
+            onMouseOver={e => ((e.currentTarget as HTMLElement).style.color = "#fca5a5")}
+            onMouseOut={e => ((e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.4)")}
           >
-            {signing ? "Signing out..." : "Sign out"}
+            {signing ? "Signing out…" : "Sign out"}
           </button>
         </div>
       </div>

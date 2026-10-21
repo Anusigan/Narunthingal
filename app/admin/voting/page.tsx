@@ -31,9 +31,10 @@ export default async function AdminVotingPage() {
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Voting Management</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-sm mt-1" style={{ color: "rgba(245,240,232,0.45)" }}>
             Create voting events, manage candidates, and view results.
           </p>
+          <div className="gold-divider mt-3" />
         </div>
         <VotingManager
           userId={user.id}

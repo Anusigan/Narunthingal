@@ -34,6 +34,11 @@ export interface VotingEvent {
   is_active: boolean;
   created_by: string | null;
   created_at: string;
+  duration_minutes: number | null;
+  ends_at: string | null;
+  total_eligible: number | null;
+  results_released: boolean;
+  elected: Record<string, string> | null;
 }
 
 export interface Vote {
