@@ -16,6 +16,32 @@ interface ClubRow {
   position: string;
 }
 
+function Field({
+  label,
+  hint,
+  required,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+  <div className="flex flex-col gap-1.5">
+    <label className="label">
+      {label} {required && <span style={{ color: "#D4A017" }}>*</span>}
+    </label>
+    {hint && (
+      <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>
+        {hint}
+      </p>
+    )}
+    {children}
+  </div>
+  );
+}
+
 export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -104,30 +130,6 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     router.push("/");
     router.refresh();
   }
-
-  const Field = ({
-    label,
-    hint,
-    required,
-    children,
-  }: {
-    label: string;
-    hint?: string;
-    required?: boolean;
-    children: React.ReactNode;
-  }) => (
-    <div className="flex flex-col gap-1.5">
-      <label className="label">
-        {label} {required && <span style={{ color: "#D4A017" }}>*</span>}
-      </label>
-      {hint && (
-        <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>
-          {hint}
-        </p>
-      )}
-      {children}
-    </div>
-  );
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
