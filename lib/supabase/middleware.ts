@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { isAdmin } from "@/lib/admin";
+import { isAdminAsync } from "@/lib/admin";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -57,7 +57,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Guard admin routes
-  if (pathname.startsWith("/admin") && !isAdmin(email)) {
+  if (pathname.startsWith("/admin") && !(await isAdminAsync(email, supabase))) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

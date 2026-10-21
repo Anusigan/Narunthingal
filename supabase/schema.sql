@@ -131,7 +131,35 @@ create policy "Authenticated read all votes"
 
 
 -- ──────────────────────────────────────────────
--- 5. Auto-create profile on new user sign-up
+-- 5. Admins
+-- ──────────────────────────────────────────────
+create table if not exists public.admins (
+  id        uuid default gen_random_uuid() primary key,
+  email     text not null unique,
+  added_by  text,
+  added_at  timestamptz default now()
+);
+
+alter table public.admins enable row level security;
+
+-- Any authenticated user can read admins (needed for the isAdminAsync check)
+create policy "Authenticated read admins"
+  on public.admins for select
+  using (auth.role() = 'authenticated');
+
+-- Only existing admins can insert/delete (enforced in Next.js server actions)
+create policy "Authenticated manage admins"
+  on public.admins for all
+  using (auth.role() = 'authenticated');
+
+-- Seed the initial admin
+insert into public.admins (email, added_by)
+values ('sivananthan.20230297@iit.ac.lk', 'system')
+on conflict (email) do nothing;
+
+
+-- ──────────────────────────────────────────────
+-- 6. Auto-create profile on new user sign-up
 -- ──────────────────────────────────────────────
 create or replace function public.handle_new_user()
 returns trigger

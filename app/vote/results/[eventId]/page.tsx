@@ -7,8 +7,9 @@ import type { VotingEvent, Vote } from "@/lib/types";
 export default async function VoteResultsPage({
   params,
 }: {
-  params: { eventId: string };
+  params: Promise<{ eventId: string }>;
 }) {
+  const { eventId } = await params;
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,7 +20,7 @@ export default async function VoteResultsPage({
   const { data: event } = await supabase
     .from("voting_events")
     .select("*")
-    .eq("id", params.eventId)
+    .eq("id", eventId)
     .single();
 
   if (!event) redirect("/vote");
@@ -28,7 +29,7 @@ export default async function VoteResultsPage({
   const { data: myVote } = await supabase
     .from("votes")
     .select("*")
-    .eq("event_id", params.eventId)
+    .eq("event_id", eventId)
     .eq("user_id", user.id)
     .single();
 
@@ -38,7 +39,7 @@ export default async function VoteResultsPage({
   const { count: totalVotes } = await supabase
     .from("votes")
     .select("*", { count: "exact", head: true })
-    .eq("event_id", params.eventId);
+    .eq("event_id", eventId);
 
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;

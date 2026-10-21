@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/admin";
+import { isAdminAsync } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
 import VotingManager from "./VotingManager";
 import type { VotingEvent, Vote } from "@/lib/types";
@@ -11,7 +11,7 @@ export default async function AdminVotingPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || !isAdmin(user.email)) redirect("/");
+  if (!user || !(await isAdminAsync(user.email, supabase))) redirect("/");
 
   const { data: events } = await supabase
     .from("voting_events")
