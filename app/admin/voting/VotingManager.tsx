@@ -351,10 +351,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                 <button
                   onClick={() => deleteEvent(event.id)}
                   disabled={busy === event.id + "-del"}
-                  className="px-3 py-2 rounded-lg transition-colors text-sm"
-                  style={{ color: "rgba(245,240,232,0.35)" }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#f87171"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.06)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(245,240,232,0.35)"; (e.currentTarget as HTMLButtonElement).style.background = ""; }}
+                  className="px-3 py-2 rounded-lg text-sm delete-icon-btn"
                   title="Delete event"
                 >
                   🗑

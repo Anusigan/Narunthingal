@@ -233,10 +233,8 @@ export default function CandidatesTable({ applications }: Props) {
               <>
                 <tr
                   key={a.id}
-                  className="transition-colors"
+                  className="table-row"
                   style={{ borderBottom: "1px solid rgba(212,160,23,0.08)" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(212,160,23,0.04)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                 >
                   <td className="px-4 py-3 font-medium text-white">
                     {a.name}

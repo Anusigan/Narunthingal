@@ -93,10 +93,7 @@ export default function Navbar({ email, name }: NavbarProps) {
           <button
             onClick={signOut}
             disabled={signing}
-            className="hidden sm:block text-xs transition-colors duration-150"
-            style={{ color: "rgba(245,240,232,0.4)" }}
-            onMouseOver={e => ((e.currentTarget as HTMLElement).style.color = "#fca5a5")}
-            onMouseOut={e => ((e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.4)")}
+            className="hidden sm:block text-xs signout-btn"
           >
             {signing ? "Signing out…" : "Sign out"}
           </button>

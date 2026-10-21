@@ -114,4 +114,32 @@
   a, button, [role="button"] {
     touch-action: manipulation;
   }
+
+  .signout-btn {
+    color: rgba(245,240,232,0.4);
+    transition: color 150ms;
+  }
+  .signout-btn:hover { color: #fca5a5; }
+
+  .google-btn {
+    background: #ffffff;
+    color: #111111;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.45);
+    transition: box-shadow 200ms, transform 200ms;
+  }
+  .google-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  .delete-icon-btn {
+    color: rgba(245,240,232,0.35);
+    transition: color 150ms, background 150ms;
+  }
+  .delete-icon-btn:hover {
+    color: #f87171;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .table-row:hover { background: rgba(212,160,23,0.04); }
 }
