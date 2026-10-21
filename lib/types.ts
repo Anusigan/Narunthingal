@@ -19,6 +19,7 @@ export interface Application {
   first_preference: Position;
   confidence_reason: string;
   second_preference: Position | null;
+  second_preference_reason: string | null;
   volunteered_last_year: boolean;
   last_year_contribution: string | null;
   current_clubs: string | null;

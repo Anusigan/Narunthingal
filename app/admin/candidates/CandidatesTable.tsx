@@ -288,21 +288,26 @@ export default function CandidatesTable({ applications }: Props) {
                   <tr key={`${a.id}-expanded`} style={{ background: "rgba(212,160,23,0.04)" }}>
                     <td colSpan={7} className="px-6 py-5">
                       <div className="grid sm:grid-cols-2 gap-5">
-                        <Detail label="Why suitable">
+                        <Detail label={`Suitability — ${a.first_preference}`}>
                           {a.confidence_reason}
                         </Detail>
+                        {a.second_preference && a.second_preference_reason && (
+                          <Detail label={`Suitability — ${a.second_preference}`}>
+                            {a.second_preference_reason}
+                          </Detail>
+                        )}
                         {a.volunteered_last_year && a.last_year_contribution && (
-                          <Detail label="Last year contribution">
+                          <Detail label="Previous Narunthingal Contributions">
                             {a.last_year_contribution}
                           </Detail>
                         )}
                         {a.current_clubs && (
-                          <Detail label="Current clubs & positions">
+                          <Detail label="Club Memberships & Roles">
                             {a.current_clubs}
                           </Detail>
                         )}
                         {a.previous_experience && (
-                          <Detail label="Previous experience">
+                          <Detail label="Organizing & Volunteering Experience">
                             {a.previous_experience}
                           </Detail>
                         )}

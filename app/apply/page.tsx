@@ -14,7 +14,7 @@ export default async function ApplyPage() {
   // Check if already applied
   const { data: existing } = await supabase
     .from("applications")
-    .select("id, first_preference, second_preference, submitted_at")
+    .select("id, first_preference, second_preference, second_preference_reason, submitted_at")
     .eq("user_id", user.id)
     .single();
 
@@ -65,7 +65,7 @@ export default async function ApplyPage() {
               {existing.second_preference && (
                 <div>
                   <dt className="text-xs uppercase tracking-wide" style={{ color: "rgba(212,160,23,0.6)" }}>
-                    Second Preference
+                    Alternate Role Preference
                   </dt>
                   <dd className="text-white mt-0.5">
                     {existing.second_preference}
