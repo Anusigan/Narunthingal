@@ -1,5 +1,6 @@
 "use client";
 
+import { ROLE_ORDER, sortByRole } from "@/lib/roles";
 import { notifyVotingChanged } from "@/lib/votingRealtime";
 import { createClient } from "@/lib/supabase/client";
 import type { Vote, VotingEvent } from "@/lib/types";
@@ -109,7 +110,12 @@ export default function VotingManager({ userId, events, votes }: Props) {
     if (event.elected && Object.keys(event.elected).length > 0) {
       setElectedEntries(Object.entries(event.elected).map(([role, person]) => ({ role, person })));
     } else {
-      setElectedEntries([{ role: "President", person: "" }, { role: "Secretary", person: "" }]);
+      // Rank candidates by votes: 1st → President, 2nd → Vice President, ...
+      const { counts } = resultsFor(event);
+      const ranked = [...event.candidates].sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0));
+      setElectedEntries(
+        ranked.slice(0, 2).map((person, i) => ({ role: ROLE_ORDER[i], person }))
+      );
     }
     setError(null);
     setReleasingId(event.id);
@@ -137,15 +143,33 @@ export default function VotingManager({ userId, events, votes }: Props) {
           <div className="card w-full max-w-lg" style={{ borderColor: "rgba(212,160,23,0.4)" }}>
             <h2 className="text-lg font-semibold text-white mb-1">Release Results</h2>
             <p className="text-sm mb-5" style={{ color: "rgba(245,240,232,0.45)" }}>
-              {releasingEvent.title} — enter the elected members below.
+              {releasingEvent.title} — assign each winner a position. The live screen
+              reveals them from the lowest position up to the President.
             </p>
+
+            <div className="mb-4 rounded-lg px-3 py-2 text-xs flex flex-col gap-0.5" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(245,240,232,0.5)" }}>
+              {(() => {
+                const { counts } = resultsFor(releasingEvent);
+                return [...releasingEvent.candidates]
+                  .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0))
+                  .map((c, i) => (
+                    <span key={c}>
+                      {i + 1}. {c} — {counts[c] ?? 0} vote{(counts[c] ?? 0) !== 1 ? "s" : ""}
+                    </span>
+                  ));
+              })()}
+            </div>
+            <datalist id="role-options">
+              {ROLE_ORDER.map((r) => <option key={r} value={r} />)}
+            </datalist>
 
             <div className="flex flex-col gap-3 mb-5">
               {electedEntries.map((entry, i) => (
                 <div key={i} className="flex flex-col sm:flex-row gap-2">
                   <input
                     className="input flex-1"
-                    placeholder="Role (e.g. President)"
+                    list="role-options"
+                    placeholder="Position (e.g. President)"
                     value={entry.role}
                     onChange={(e) => {
                       const updated = [...electedEntries];
@@ -153,16 +177,20 @@ export default function VotingManager({ userId, events, votes }: Props) {
                       setElectedEntries(updated);
                     }}
                   />
-                  <input
+                  <select
                     className="input flex-1"
-                    placeholder="Elected person"
                     value={entry.person}
                     onChange={(e) => {
                       const updated = [...electedEntries];
                       updated[i] = { ...updated[i], person: e.target.value };
                       setElectedEntries(updated);
                     }}
-                  />
+                  >
+                    <option value="">Select person…</option>
+                    {[...new Set([...releasingEvent.candidates, ...(entry.person ? [entry.person] : [])])].map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
                   <button
                     onClick={() => setElectedEntries(electedEntries.filter((_, j) => j !== i))}
                     className="px-2 py-1 text-sm rounded"
@@ -402,7 +430,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                   Elected Members (Public)
                 </h3>
                 <div className="flex flex-col gap-1.5">
-                  {Object.entries(event.elected).map(([role, person]) => (
+                  {sortByRole(Object.entries(event.elected)).map(([role, person]) => (
                     <div key={role} className="flex items-center justify-between text-sm">
                       <span style={{ color: "rgba(245,240,232,0.5)" }}>{role}</span>
                       <span className="font-medium text-white">{person}</span>

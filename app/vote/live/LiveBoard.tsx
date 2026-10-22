@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { onPresence, type OnlineUser } from "@/lib/presence";
+import { getAdminEmails } from "@/lib/admin";
+import { sortByRole } from "@/lib/roles";
 import { subscribeVotingChanges } from "@/lib/votingRealtime";
 import type { VotingEvent } from "@/lib/types";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -20,6 +22,7 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
   const [stage, setStage] = useState<Stage>("waiting");
   const [count, setCount] = useState(COUNTDOWN_FROM);
   const [revealIdx, setRevealIdx] = useState(0);
+  const [adminEmails, setAdminEmails] = useState<string[]>([]);
   const started = useRef(false);
 
   useEffect(() => onPresence(setOnline), []);
@@ -27,7 +30,10 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
   const released = !!(
     event?.results_released && event.elected && Object.keys(event.elected).length > 0
   );
-  const electedList = useMemo(() => Object.entries(event?.elected ?? {}), [event?.elected]);
+  // Most senior first (for the final list); reveal runs in reverse so the
+  // President comes last.
+  const electedList = useMemo(() => sortByRole(Object.entries(event?.elected ?? {})), [event?.elected]);
+  const revealOrder = useMemo(() => [...electedList].reverse(), [electedList]);
 
   // Results released: 5…1 countdown, then reveal each elected name in turn
   useEffect(() => {
@@ -50,13 +56,13 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
 
   useEffect(() => {
     if (stage !== "reveal") return;
-    if (revealIdx >= electedList.length) {
+    if (revealIdx >= revealOrder.length) {
       setStage("done");
       return;
     }
     const t = setTimeout(() => setRevealIdx((i) => i + 1), REVEAL_MS);
     return () => clearTimeout(t);
-  }, [stage, revealIdx, electedList.length]);
+  }, [stage, revealIdx, revealOrder.length]);
 
   // Poll votes and the event row (so the screen flips when results are released)
   useEffect(() => {
@@ -70,6 +76,9 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
         supabase.from("voting_events").select("*").eq("id", initialEvent!.id).single(),
       ]);
       if (cancelled) return;
+      const admins = await getAdminEmails(supabase);
+      if (cancelled) return;
+      setAdminEmails(admins);
       if (votes) setVotedIds(votes.map((v) => v.user_id));
       if (ev) setEvent(ev as VotingEvent);
     }
@@ -85,7 +94,10 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
   }, [initialEvent]);
 
   // Admins watch the screen but don't vote, so they aren't counted as voters
-  const voters = useMemo(() => online.filter((u) => !u.admin), [online]);
+  const voters = useMemo(
+    () => online.filter((u) => !u.admin && !adminEmails.includes(u.email.toLowerCase())),
+    [online, adminEmails]
+  );
   const voted = useMemo(() => new Set(votedIds), [votedIds]);
   const votedOnline = voters.filter((u) => voted.has(u.user_id)).length;
   const waitingOn = voters.filter((u) => !voted.has(u.user_id));
@@ -118,11 +130,16 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
             Elected Members
           </h3>
           <div className="flex flex-col gap-2">
-            {Object.entries(event.elected!).map(([role, person]) => (
+            <style>{`@keyframes blurIn { from { opacity: 0; filter: blur(14px); transform: translateY(8px) scale(0.96); } to { opacity: 1; filter: blur(0); transform: none; } }`}</style>
+            {electedList.map(([role, person], i) => (
               <div
                 key={role}
                 className="flex items-center justify-between px-4 py-3 rounded-lg"
-                style={{ background: "rgba(212,160,23,0.07)", border: "1px solid rgba(212,160,23,0.2)" }}
+                style={{
+                  background: "rgba(212,160,23,0.07)",
+                  border: "1px solid rgba(212,160,23,0.2)",
+                  animation: `blurIn 0.7s ease-out ${i * 120}ms both`,
+                }}
               >
                 <span className="text-xs uppercase tracking-wide" style={{ color: "rgba(212,160,23,0.65)" }}>
                   {role}
@@ -188,17 +205,17 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
                   lineHeight: 1,
                   color: "#E8B820",
                   textShadow: "0 0 40px rgba(232,184,32,0.6)",
-                  animation: "countPop 1s ease-out",
+                  animation: "countPop 0.9s ease-out",
                 }}
               >
                 {count}
               </div>
             </div>
           ) : (
-            electedList[revealIdx] && (
-              <div key={revealIdx} className="text-center" style={{ animation: "countPop 0.8s ease-out" }}>
+            revealOrder[revealIdx] && (
+              <div key={revealIdx} className="text-center" style={{ animation: "countPop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)" }}>
                 <p className="text-xs uppercase tracking-[0.3em] mb-4" style={{ color: "rgba(212,160,23,0.65)" }}>
-                  {electedList[revealIdx][0]}
+                  {revealOrder[revealIdx][0]}
                 </p>
                 <p
                   className="font-bold"
@@ -208,12 +225,20 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
                     textShadow: "0 0 40px rgba(232,184,32,0.5)",
                   }}
                 >
-                  {electedList[revealIdx][1]}
+                  {revealOrder[revealIdx][1]}
                 </p>
               </div>
             )
           )}
-          <style>{`@keyframes countPop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }`}</style>
+          <style>{`@keyframes countPop {
+            0%   { opacity: 0; transform: scale(0.5); filter: blur(28px); }
+            60%  { opacity: 1; transform: scale(1.08); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+          }
+          @keyframes blurIn {
+            from { opacity: 0; filter: blur(14px); transform: translateY(8px) scale(0.96); }
+            to   { opacity: 1; filter: blur(0); transform: none; }
+          }`}</style>
         </div>
       )}
 
