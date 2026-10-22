@@ -108,7 +108,11 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
     }
     if (["Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"].includes(e.key)) return;
     if (e.ctrlKey || e.metaKey) return;
-    if (/^\d$/.test(e.key)) return;
+    if (/^\d$/.test(e.key)) {
+      if (form.contact_number.length === 0 && e.key !== "0") { e.preventDefault(); return; }
+      if (form.contact_number.length === 1 && e.key !== "7") { e.preventDefault(); return; }
+      return;
+    }
     e.preventDefault();
   }
 
@@ -136,6 +140,7 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
 
     if (!form.name.trim()) return setError("Full name is required.");
     if (form.contact_number.length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
+    if (!form.contact_number.startsWith("07")) return setError("Please enter a valid Sri Lankan mobile number starting with 07.");
     if (!form.first_preference) return setError("Please select your preferred role.");
     if (!form.confidence_reason.trim()) return setError("Please complete the suitability statement for your preferred role.");
     if (!form.second_preference) return setError("Please select an alternate role preference.");
