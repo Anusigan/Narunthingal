@@ -32,7 +32,7 @@ export default async function HomePage() {
           "linear-gradient(175deg, #1a1200 0%, #0f0b02 18%, #090806 45%, #050403 100%)",
       }}
     >
-      <div>
+      <div className="flex flex-col min-h-screen">
         <Navbar email={email} name={name} />
 
         {/* Hero */}
@@ -48,7 +48,7 @@ export default async function HomePage() {
         </div>
 
         {/* Cards */}
-        <div className="max-w-4xl mx-auto px-4 pb-16 grid sm:grid-cols-2 gap-5">
+        <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-16 grid sm:grid-cols-2 gap-5 content-start">
           {/* Apply */}
           <div className="card flex flex-col gap-4">
             <div>
