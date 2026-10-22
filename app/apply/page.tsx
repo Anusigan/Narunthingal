@@ -38,6 +38,29 @@ export default async function ApplyPage() {
           <div className="gold-divider mt-4" />
         </div>
 
+        {/* Contact card */}
+        <div
+          className="rounded-xl px-5 py-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          style={{ background: "rgba(212,160,23,0.06)", border: "1px solid rgba(212,160,23,0.18)" }}
+        >
+          <p className="text-sm" style={{ color: "rgba(245,240,232,0.55)" }}>
+            Questions or inquiries about the application?
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 text-sm">
+            <div>
+              <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "rgba(212,160,23,0.6)" }}>Chairman</p>
+              <p className="text-white font-medium">Saranujan Gunanesan</p>
+              <a href="tel:+94774113969" className="tabular-nums" style={{ color: "rgba(245,240,232,0.5)" }}>+94 77 411 3969</a>
+            </div>
+            <div className="hidden sm:block w-px" style={{ background: "rgba(212,160,23,0.2)" }} />
+            <div>
+              <p className="text-xs uppercase tracking-wider mb-0.5" style={{ color: "rgba(212,160,23,0.6)" }}>Co-Chairman</p>
+              <p className="text-white font-medium">Anusigan Sivananthan</p>
+              <a href="tel:+94775810310" className="tabular-nums" style={{ color: "rgba(245,240,232,0.5)" }}>+94 77 581 0310</a>
+            </div>
+          </div>
+        </div>
+
         {existing ? (
           <div className="card" style={{ borderColor: "rgba(16,185,129,0.25)" }}>
             <div className="flex items-center gap-2 mb-6">

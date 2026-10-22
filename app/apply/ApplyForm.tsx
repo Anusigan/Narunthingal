@@ -65,6 +65,13 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     setForm((f) => ({ ...f, [field]: value }));
   }
 
+  function formatPhone(raw: string) {
+    const digits = raw.replace(/\D/g, "").slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+  }
+
   function updateClub(index: number, field: keyof ClubRow, value: string) {
     setClubs((prev) => prev.map((row, i) => i === index ? { ...row, [field]: value } : row));
   }
@@ -88,7 +95,7 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     setError(null);
 
     if (!form.name.trim()) return setError("Full name is required.");
-    if (!form.contact_number.trim()) return setError("Contact number is required.");
+    if (form.contact_number.replace(/\D/g, "").length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
     if (!form.first_preference) return setError("Please select your preferred role.");
     if (!form.confidence_reason.trim()) return setError("Please complete the suitability statement for your preferred role.");
     if (form.second_preference && !form.second_preference_reason.trim())
@@ -153,17 +160,23 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
           <input className="input opacity-60 cursor-not-allowed" value={email} readOnly />
         </Field>
 
-        <Field
-          label="Contact Number (WhatsApp)"
-          hint="Please include your country code, e.g. +94 77 123 4567"
-          required
-        >
-          <input
-            className="input"
-            value={form.contact_number}
-            onChange={(e) => update("contact_number", e.target.value)}
-            placeholder="+94 77 000 0000"
-          />
+        <Field label="Contact Number (WhatsApp)" required>
+          <div className="relative">
+            <span
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm select-none pointer-events-none"
+              style={{ color: "rgba(245,240,232,0.5)" }}
+            >
+              +94
+            </span>
+            <input
+              className="input pl-12"
+              value={form.contact_number}
+              onChange={(e) => update("contact_number", formatPhone(e.target.value))}
+              placeholder="0__ ___ ____"
+              maxLength={12}
+              inputMode="numeric"
+            />
+          </div>
         </Field>
       </div>
 
