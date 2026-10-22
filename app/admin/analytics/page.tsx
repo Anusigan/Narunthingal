@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { isAdminAsync } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
+import Unauthorized from "@/components/Unauthorized";
 import { POSITIONS } from "@/lib/types";
 import type { Application, VotingEvent, Vote } from "@/lib/types";
 
@@ -40,7 +41,8 @@ function BarRow({ label, count, total, color = "#D4A017" }: { label: string; cou
 export default async function AnalyticsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user || !(await isAdminAsync(user.email, supabase))) redirect("/");
+  if (!user) redirect("/login");
+  if (!(await isAdminAsync(user.email!, supabase))) return <Unauthorized />;
 
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;
