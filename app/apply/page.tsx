@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import ApplyForm from "./ApplyForm";
+import { isAdminAsync } from "@/lib/admin";
 
 export default async function ApplyPage() {
   const supabase = await createClient();
@@ -20,6 +21,7 @@ export default async function ApplyPage() {
 
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;
+  const admin = await isAdminAsync(email, supabase);
 
   return (
     <div className="min-h-screen">
@@ -66,7 +68,7 @@ export default async function ApplyPage() {
           </div>
         </div>
 
-        {existing ? (
+        {existing && !admin ? (
           <div className="card" style={{ borderColor: "rgba(16,185,129,0.25)" }}>
             <div className="flex items-center gap-2 mb-6">
               <div className="w-2 h-2 rounded-full" style={{ background: "#34d399" }} />
@@ -110,6 +112,7 @@ export default async function ApplyPage() {
             userId={user.id}
             email={email}
             defaultName={name ?? ""}
+            isAdmin={admin}
           />
         )}
       </div>

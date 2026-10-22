@@ -9,6 +9,7 @@ interface ApplyFormProps {
   userId: string;
   email: string;
   defaultName: string;
+  isAdmin?: boolean;
 }
 
 interface ClubRow {
@@ -42,10 +43,11 @@ function Field({
   );
 }
 
-export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps) {
+export default function ApplyForm({ userId, email, defaultName, isAdmin }: ApplyFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   const phoneRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -123,7 +125,7 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     return filled.map((r) => r.position.trim() ? `${r.club.trim()} — ${r.position.trim()}` : r.club.trim()).join("\n");
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -139,10 +141,14 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     if (form.volunteered_last_year === "yes" && !form.last_year_contribution.trim())
       return setError("Please describe your contributions in the previous Narunthingal event.");
 
+    setShowConfirm(true);
+  }
+
+  async function submitConfirmed() {
+    setShowConfirm(false);
     setSubmitting(true);
 
-    const supabase = createClient();
-    const { error: dbError } = await supabase.from("applications").insert({
+    const payload = {
       user_id: userId,
       email,
       name: form.name.trim(),
@@ -155,7 +161,12 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
       last_year_contribution: form.volunteered_last_year === "yes" ? form.last_year_contribution.trim() : null,
       current_clubs: serializeClubs(),
       previous_experience: form.previous_experience.trim() || null,
-    });
+    };
+
+    const supabase = createClient();
+    const { error: dbError } = isAdmin
+      ? await supabase.from("applications").upsert(payload, { onConflict: "user_id" })
+      : await supabase.from("applications").insert(payload);
 
     setSubmitting(false);
 
@@ -389,6 +400,49 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
       <p className="text-xs text-center" style={{ color: "rgba(212,160,23,0.4)" }}>
         Applications are final once submitted. Please ensure all information is accurate before proceeding.
       </p>
+
+      {/* Confirmation dialog */}
+      {showConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl p-6 flex flex-col gap-4"
+            style={{
+              background: "rgba(11,8,4,0.97)",
+              border: "1px solid rgba(212,160,23,0.25)",
+              boxShadow: "0 32px 80px rgba(0,0,0,0.8)",
+            }}
+          >
+            <div>
+              <p className="text-base font-semibold text-white mb-1">Confirm your submission</p>
+              <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
+                You are applying for <span className="text-white font-medium">{form.first_preference}</span>
+                {form.second_preference && (
+                  <> with <span className="text-white font-medium">{form.second_preference}</span> as alternate</>
+                )}.
+                {!isAdmin && " This cannot be changed after submission."}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium"
+                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,240,232,0.6)" }}
+              >
+                Go back
+              </button>
+              <button
+                onClick={submitConfirmed}
+                className="flex-1 btn-primary"
+              >
+                Confirm & Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
