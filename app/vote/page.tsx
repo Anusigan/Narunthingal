@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import VoteBallot from "./VoteBallot";
 import RealtimeRefresh from "@/components/RealtimeRefresh";
+import { isAdminAsync } from "@/lib/admin";
 import type { VotingEvent, Vote } from "@/lib/types";
 
 export default async function VotePage() {
@@ -15,6 +16,27 @@ export default async function VotePage() {
 
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;
+  const admin = await isAdminAsync(email, supabase);
+
+  if (!admin) {
+    return (
+      <div className="min-h-screen">
+        <Navbar email={email} name={name} />
+        <div className="max-w-2xl mx-auto px-4 py-10">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white">Voting</h1>
+            <div className="gold-divider mt-4" />
+          </div>
+          <div className="card text-center py-16">
+            <p className="text-lg font-semibold text-white mb-2">Voting opens soon</p>
+            <p className="text-sm" style={{ color: "rgba(245,240,232,0.4)" }}>
+              The voting phase has not started yet. Check back later.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Active voting events
   const { data: events } = await supabase
