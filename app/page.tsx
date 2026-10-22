@@ -171,10 +171,7 @@ export default async function HomePage() {
                 Narunthingal &apos;27
               </p>
               <p className="text-xs" style={{ color: "rgba(245,240,232,0.22)" }}>
-                Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
-              </p>
-              <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.15)" }}>
-                Tested by Lagshan Rathinavel
+                Developed by Anusigan Sivananthan, Linushankaran Janarththanan &amp; Lagshan Rathinavel
               </p>
             </div>
 
