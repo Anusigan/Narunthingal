@@ -154,15 +154,39 @@ export default async function HomePage() {
 
         {/* Footer */}
         <footer
-          className="relative max-w-4xl mx-auto px-4 py-6 mt-4 flex items-center justify-between"
+          className="relative max-w-4xl mx-auto px-4 py-6 mt-4"
           style={{ borderTop: "1px solid rgba(212,160,23,0.12)" }}
         >
-          <p className="text-xs" style={{ color: "rgba(245,240,232,0.25)" }}>
-            Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
-          </p>
-          <p className="text-xs" style={{ color: "rgba(212,160,23,0.35)" }}>
-            Narunthingal &apos;27
-          </p>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs" style={{ color: "rgba(245,240,232,0.25)" }}>
+              Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
+            </p>
+            <p className="text-xs" style={{ color: "rgba(212,160,23,0.35)" }}>
+              Narunthingal &apos;27
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <p className="text-xs mr-3 self-center whitespace-nowrap" style={{ color: "rgba(245,240,232,0.3)" }}>
+              Technical issues:
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <a
+                href="tel:+94775810310"
+                className="text-xs"
+                style={{ color: "rgba(212,160,23,0.5)" }}
+              >
+                Anusigan Sivananthan · +94 77 581 0310
+              </a>
+              <span className="hidden sm:inline text-xs" style={{ color: "rgba(245,240,232,0.15)" }}>·</span>
+              <a
+                href="tel:+94779285488"
+                className="text-xs"
+                style={{ color: "rgba(212,160,23,0.5)" }}
+              >
+                Linushankaran Janarththanan · +94 77 928 5488
+              </a>
+            </div>
+          </div>
         </footer>
       </div>
     </div>
