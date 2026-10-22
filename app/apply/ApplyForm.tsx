@@ -66,21 +66,20 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function getMaskedPhone(digits: string) {
+  function formatPhoneDisplay(digits: string) {
     const d = digits.slice(0, 10);
-    const p = d.padEnd(10, "_");
-    return `${p.slice(0, 3)} ${p.slice(3, 6)} ${p.slice(6)}`;
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return `${d.slice(0, 3)} ${d.slice(3)}`;
+    return `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}`;
   }
 
   function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
     const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
     update("contact_number", digits);
-    const masked = getMaskedPhone(digits);
     requestAnimationFrame(() => {
       if (phoneRef.current) {
-        const pos = masked.indexOf("_");
-        const cursor = pos === -1 ? masked.length : pos;
-        phoneRef.current.setSelectionRange(cursor, cursor);
+        const len = formatPhoneDisplay(digits).length;
+        phoneRef.current.setSelectionRange(len, len);
       }
     });
   }
@@ -92,12 +91,10 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
       if (digits.length === 0) return;
       const next = digits.slice(0, -1);
       update("contact_number", next);
-      const masked = getMaskedPhone(next);
       requestAnimationFrame(() => {
         if (phoneRef.current) {
-          const pos = masked.indexOf("_");
-          const cursor = pos === -1 ? masked.length : pos;
-          phoneRef.current.setSelectionRange(cursor, cursor);
+          const len = formatPhoneDisplay(next).length;
+          phoneRef.current.setSelectionRange(len, len);
         }
       });
       return;
@@ -106,17 +103,6 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     if (e.ctrlKey || e.metaKey) return;
     if (/^\d$/.test(e.key)) return;
     e.preventDefault();
-  }
-
-  function moveCursorToEnd() {
-    requestAnimationFrame(() => {
-      if (phoneRef.current) {
-        const masked = getMaskedPhone(form.contact_number);
-        const pos = masked.indexOf("_");
-        const cursor = pos === -1 ? masked.length : pos;
-        phoneRef.current.setSelectionRange(cursor, cursor);
-      }
-    });
   }
 
   function updateClub(index: number, field: keyof ClubRow, value: string) {
@@ -219,11 +205,10 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
             <input
               ref={phoneRef}
               className="input pl-12"
-              value={getMaskedPhone(form.contact_number)}
+              value={formatPhoneDisplay(form.contact_number)}
               onChange={handlePhoneChange}
               onKeyDown={handlePhoneKeyDown}
-              onFocus={moveCursorToEnd}
-              onClick={moveCursorToEnd}
+              placeholder="077 123 4567"
               inputMode="numeric"
             />
           </div>
