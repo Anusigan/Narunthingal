@@ -8,6 +8,7 @@ import { Suspense, useEffect, useState } from "react";
 // test voter accounts sign in with email + password instead.
 const TEST_MODE = process.env.NEXT_PUBLIC_TEST_MODE === "true";
 
+const SPLASH_EN = "NARUNTHINGAL".split("");
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
   useEffect(() => {
@@ -19,16 +20,76 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
     <div className="sp">
       <div className="sp-glow" />
 
-      {/* Title image — mix-blend-mode:screen drops the black bg, leaves only the gold */}
-      <img
-        src="/narunthingal-title.webp"
-        alt="நருந்திங்கள் 2027"
-        className="sp-title"
-      />
+      {/* Kolam geometric pattern — draws itself, then text appears over it */}
+      <svg className="sp-kolam" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+           fill="none" strokeLinecap="round" strokeLinejoin="round">
+        {/* Outer octagon */}
+        <path className="spk-oct" pathLength="1" stroke="rgba(212,160,23,0.35)" strokeWidth="0.8"
+          d="M200,45 L310,90 L355,200 L310,310 L200,355 L90,310 L45,200 L90,90 Z"/>
+        {/* Inner diamond */}
+        <path className="spk-dia" pathLength="1" stroke="rgba(212,160,23,0.45)" strokeWidth="0.9"
+          d="M200,110 L290,200 L200,290 L110,200 Z"/>
+        {/* Central rotated square */}
+        <path className="spk-sq" pathLength="1" stroke="rgba(212,160,23,0.35)" strokeWidth="0.8"
+          d="M155,155 L245,155 L245,245 L155,245 Z"/>
+        {/* 4 cardinal lotus petals */}
+        <path className="spk-pN" pathLength="1" stroke="rgba(212,160,23,0.7)" strokeWidth="1.1"
+          d="M200,200 C224,176 224,126 200,110 C176,126 176,176 200,200"/>
+        <path className="spk-pE" pathLength="1" stroke="rgba(212,160,23,0.7)" strokeWidth="1.1"
+          d="M200,200 C224,224 274,224 290,200 C274,176 224,176 200,200"/>
+        <path className="spk-pS" pathLength="1" stroke="rgba(212,160,23,0.7)" strokeWidth="1.1"
+          d="M200,200 C176,224 176,274 200,290 C224,274 224,224 200,200"/>
+        <path className="spk-pW" pathLength="1" stroke="rgba(212,160,23,0.7)" strokeWidth="1.1"
+          d="M200,200 C176,176 126,176 110,200 C126,224 176,224 200,200"/>
+        {/* Diagonal connectors: square corners → octagon corners */}
+        <path className="spk-dNE" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M245,155 L310,90"/>
+        <path className="spk-dSE" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M245,245 L310,310"/>
+        <path className="spk-dSW" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M155,245 L90,310"/>
+        <path className="spk-dNW" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M155,155 L90,90"/>
+        {/* Cardinal spokes: inner diamond → outer octagon */}
+        <path className="spk-rN" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M200,110 L200,45"/>
+        <path className="spk-rE" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M290,200 L355,200"/>
+        <path className="spk-rS" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M200,290 L200,355"/>
+        <path className="spk-rW" pathLength="1" stroke="rgba(212,160,23,0.28)" strokeWidth="0.7"
+          d="M110,200 L45,200"/>
+        {/* Dots at all key vertices */}
+        {([
+          [200,45,3.5],[310,90,3],[355,200,3.5],[310,310,3],
+          [200,355,3.5],[90,310,3],[45,200,3.5],[90,90,3],
+          [200,110,3.5],[290,200,3.5],[200,290,3.5],[110,200,3.5],
+          [155,155,2.5],[245,155,2.5],[245,245,2.5],[155,245,2.5],
+        ] as [number,number,number][]).map(([cx,cy,r],i) => (
+          <circle key={i} cx={cx} cy={cy} r={r}
+            fill={r > 3 ? "rgba(212,160,23,0.75)" : "rgba(212,160,23,0.55)"}
+            className="spk-dot"/>
+        ))}
+        {/* Center dot */}
+        <circle cx="200" cy="200" r="5" fill="#E8B820" className="spk-dot"/>
+      </svg>
 
+      {/* Hero text */}
+      <div className="sp-word" aria-label="Narunthingal">
+        {SPLASH_EN.map((l, i) => (
+          <span key={i} className="sp-letter" style={{ animationDelay: `${1500 + i * 68}ms` }}>
+            {l}
+          </span>
+        ))}
+      </div>
+
+      <div className="sp-rule" />
+      <p className="sp-year">2 0 2 7</p>
       <p className="sp-tag">Organizing Committee Portal</p>
 
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
+
         .sp {
           position: fixed; inset: 0; z-index: 100; background: #080706;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -47,22 +108,71 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
           0% { opacity: 0; } 18% { opacity: 1; } 74% { opacity: 1; } 100% { opacity: 0; }
         }
 
-        /* Title image */
-        .sp-title {
-          position: relative; z-index: 2;
-          width: min(680px, 92vw);
-          mix-blend-mode: screen;
-          opacity: 0; animation: spFadeUp 0.9s ease 0.3s forwards;
+        /* Kolam SVG */
+        .sp-kolam {
+          position: absolute; width: min(440px, 90vw); height: min(440px, 90vw); pointer-events: none;
+          opacity: 0; animation: spKolam 5.4s ease forwards;
+        }
+        @keyframes spKolam {
+          0% { opacity: 0; } 6% { opacity: 1; } 74% { opacity: 0.55; } 100% { opacity: 0; }
         }
 
+        /* Path draw — pathLength=1 so dasharray/offset use [0,1] */
+        .spk-oct { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 1.1s ease 0.1s forwards; }
+        .spk-dia { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.8s ease 0.5s forwards; }
+        .spk-sq  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.6s ease 0.8s forwards; }
+        .spk-pN  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.5s ease 0.95s forwards; }
+        .spk-pE  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.5s ease 1.05s forwards; }
+        .spk-pS  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.5s ease 1.15s forwards; }
+        .spk-pW  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.5s ease 1.25s forwards; }
+        .spk-dNE { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.35s ease 1.05s forwards; }
+        .spk-dSE { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.35s ease 1.15s forwards; }
+        .spk-dSW { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.35s ease 1.25s forwards; }
+        .spk-dNW { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.35s ease 1.35s forwards; }
+        .spk-rN  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.3s ease 1.05s forwards; }
+        .spk-rE  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.3s ease 1.15s forwards; }
+        .spk-rS  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.3s ease 1.25s forwards; }
+        .spk-rW  { stroke-dasharray:1; stroke-dashoffset:1; animation: spDraw 0.3s ease 1.35s forwards; }
+        .spk-dot { opacity:0; animation: spFd 0.3s ease 0.15s forwards; }
+        @keyframes spDraw { to { stroke-dashoffset: 0; } }
+        @keyframes spFd   { to { opacity: 1; } }
+
+        /* Hero word */
+        .sp-word { position: relative; z-index: 2; display: flex; gap: 0; }
+        .sp-letter {
+          font-family: 'Cinzel Decorative', 'Times New Roman', serif;
+          font-size: clamp(1.4rem, 5.5vw, 2.4rem); font-weight: 700; letter-spacing: 0.08em;
+          color: #E8B820;
+          text-shadow:
+            0 0 14px rgba(232,184,32,1),
+            0 0 40px rgba(212,160,23,0.55),
+            0 0 80px rgba(212,160,23,0.2);
+          opacity: 0; transform: translateY(10px);
+          animation: spLetterIn 0.45s ease-out forwards;
+        }
+        @keyframes spLetterIn { to { opacity: 1; transform: translateY(0); } }
+
+        .sp-rule {
+          position: relative; z-index: 2; height: 1px; width: 0; margin: 18px 0 0;
+          background: linear-gradient(90deg, transparent, rgba(212,160,23,0.6) 50%, transparent);
+          animation: spRule 0.55s ease 2.7s forwards;
+        }
+        @keyframes spRule { from { width:0; opacity:0; } to { width:220px; opacity:1; } }
+
+        .sp-year {
+          position: relative; z-index: 2; margin: 14px 0 0;
+          font-size: 0.65rem; font-weight: 300; letter-spacing: 0.45em;
+          color: rgba(212,160,23,0.5); opacity: 0;
+          animation: spFadeUp 0.55s ease 3.0s forwards;
+        }
         .sp-tag {
-          position: relative; z-index: 2; margin: 4px 0 0;
+          position: relative; z-index: 2; margin: 8px 0 0;
           font-size: 0.52rem; font-weight: 400; letter-spacing: 0.2em;
-          text-transform: uppercase; color: rgba(212,160,23,0.3); opacity: 0;
-          animation: spFadeUp 0.55s ease 1.0s forwards;
+          text-transform: uppercase; color: rgba(212,160,23,0.25); opacity: 0;
+          animation: spFadeUp 0.55s ease 3.3s forwards;
         }
         @keyframes spFadeUp {
-          from { opacity: 0; transform: translateY(8px); }
+          from { opacity: 0; transform: translateY(6px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
