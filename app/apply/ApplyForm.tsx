@@ -169,9 +169,10 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
     };
 
     const supabase = createClient();
-    const { error: dbError } = isAdmin
-      ? await supabase.from("applications").upsert(payload, { onConflict: "user_id" })
-      : await supabase.from("applications").insert(payload);
+    if (isAdmin) {
+      await supabase.from("applications").delete().eq("user_id", userId);
+    }
+    const { error: dbError } = await supabase.from("applications").insert(payload);
 
     setSubmitting(false);
 
