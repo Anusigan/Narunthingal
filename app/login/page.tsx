@@ -94,6 +94,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
           position: fixed; inset: 0; z-index: 100; background: #080706;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
           animation: spExit 5.4s ease forwards;
+          pointer-events: none;
         }
         @keyframes spExit { 0%, 74% { opacity: 1; } 100% { opacity: 0; } }
 
