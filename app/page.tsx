@@ -173,6 +173,9 @@ export default async function HomePage() {
               <p className="text-xs" style={{ color: "rgba(245,240,232,0.22)" }}>
                 Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
               </p>
+              <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.15)" }}>
+                Tested by Lagshan Rathinavel
+              </p>
             </div>
 
             {/* Right — technical support */}
@@ -187,6 +190,10 @@ export default async function HomePage() {
               <a href="tel:+94779285488" className="flex items-center justify-between gap-8 group">
                 <span className="text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>Linushankaran Janarththanan</span>
                 <span className="text-xs tabular-nums" style={{ color: "rgba(212,160,23,0.55)" }}>+94 77 928 5488</span>
+              </a>
+              <a href="tel:+94765327251" className="flex items-center justify-between gap-8 group">
+                <span className="text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>Lagshan Rathinavel</span>
+                <span className="text-xs tabular-nums" style={{ color: "rgba(212,160,23,0.55)" }}>+94 76 532 7251</span>
               </a>
             </div>
           </div>
