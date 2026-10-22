@@ -207,7 +207,6 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
               onKeyDown={handlePhoneKeyDown}
               onFocus={moveCursorToEnd}
               onClick={moveCursorToEnd}
-              maxLength={12}
               inputMode="numeric"
             />
           </div>
