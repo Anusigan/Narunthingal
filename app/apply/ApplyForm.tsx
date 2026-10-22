@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { POSITIONS } from "@/lib/types";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface ApplyFormProps {
@@ -48,6 +48,11 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = showConfirm ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showConfirm]);
   const phoneRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
