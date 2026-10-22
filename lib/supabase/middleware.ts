@@ -37,6 +37,7 @@ export async function updateSession(request: NextRequest) {
   // Always allow public and auth routes
   if (
     pathname === "/login" ||
+    pathname === "/unauthorized" ||
     pathname.startsWith("/auth/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon")
@@ -58,7 +59,7 @@ export async function updateSession(request: NextRequest) {
 
   // Guard admin routes
   if (pathname.startsWith("/admin") && !(await isAdminAsync(email, supabase))) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
   }
 
   return supabaseResponse;
