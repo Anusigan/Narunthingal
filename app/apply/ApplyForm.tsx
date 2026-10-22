@@ -129,7 +129,8 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     if (form.contact_number.length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
     if (!form.first_preference) return setError("Please select your preferred role.");
     if (!form.confidence_reason.trim()) return setError("Please complete the suitability statement for your preferred role.");
-    if (form.second_preference && !form.second_preference_reason.trim())
+    if (!form.second_preference) return setError("Please select an alternate role preference.");
+    if (!form.second_preference_reason.trim())
       return setError("Please complete the suitability statement for your alternate role.");
     if (!form.volunteered_last_year)
       return setError("Please indicate whether you volunteered in the previous Narunthingal event.");
@@ -247,16 +248,13 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
           </Field>
         )}
 
-        <Field label="Alternate Role Preference">
+        <Field label="Alternate Role Preference" required>
           <select
             className="input"
             value={form.second_preference}
-            onChange={(e) => {
-              update("second_preference", e.target.value);
-              if (!e.target.value) update("second_preference_reason", "");
-            }}
+            onChange={(e) => update("second_preference", e.target.value)}
           >
-            <option value="">None (optional)</option>
+            <option value="">Select a position...</option>
             {POSITIONS.filter((p) => p !== form.first_preference).map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}

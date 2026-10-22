@@ -1,5 +1,5 @@
 export const POSITIONS = [
-  "President",
+  "Chairman",
   "Secretary",
   "Treasurer",
   "Project Coordinator",
