@@ -86,7 +86,23 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
   }
 
   function handlePhoneKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"].includes(e.key)) return;
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const digits = form.contact_number;
+      if (digits.length === 0) return;
+      const next = digits.slice(0, -1);
+      update("contact_number", next);
+      const masked = getMaskedPhone(next);
+      requestAnimationFrame(() => {
+        if (phoneRef.current) {
+          const pos = masked.indexOf("_");
+          const cursor = pos === -1 ? masked.length : pos;
+          phoneRef.current.setSelectionRange(cursor, cursor);
+        }
+      });
+      return;
+    }
+    if (["Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"].includes(e.key)) return;
     if (e.ctrlKey || e.metaKey) return;
     if (/^\d$/.test(e.key)) return;
     e.preventDefault();
