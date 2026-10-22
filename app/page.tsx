@@ -86,7 +86,7 @@ export default async function HomePage() {
                 Participate in active committee votes. Your IIT login ensures one vote per person.
               </p>
             </div>
-            {(voteCount ?? 0) > 0 ? (
+            {admin && (voteCount ?? 0) > 0 ? (
               <div className="flex flex-col gap-3">
                 <div
                   className="rounded-lg px-4 py-3 text-sm"
@@ -100,12 +100,19 @@ export default async function HomePage() {
                   Go to Voting
                 </Link>
               </div>
-            ) : (
+            ) : admin ? (
               <div
                 className="rounded-lg px-4 py-3 text-sm"
                 style={{ color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
               >
                 No active votes right now. Check back later.
+              </div>
+            ) : (
+              <div
+                className="rounded-lg px-4 py-3 text-sm"
+                style={{ color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                Voting opens soon. Check back later.
               </div>
             )}
           </div>
