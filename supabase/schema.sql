@@ -92,10 +92,11 @@ create policy "Authenticated read voting events"
   on public.voting_events for select
   using (auth.role() = 'authenticated');
 
--- All authenticated users can insert/update/delete (admin guard is in Next.js)
-create policy "Authenticated manage voting events"
+-- Only admins can create/update/delete events
+create policy "Admins manage voting events"
   on public.voting_events for all
-  using (auth.role() = 'authenticated');
+  using (public.is_admin())
+  with check (public.is_admin());
 
 
 -- ──────────────────────────────────────────────
@@ -114,20 +115,64 @@ create table if not exists public.votes (
 
 alter table public.votes enable row level security;
 
+-- Helpers (plpgsql so they can reference tables defined later in this file)
+create or replace function public.is_admin()
+returns boolean
+language plpgsql stable security definer set search_path = public
+as $$
+begin
+  return exists (
+    select 1 from public.admins
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
+end;
+$$;
+
+-- Which users have voted in an event (never who they voted for). Used by the
+-- live board so ordinary users don't need read access to the votes table.
+create or replace function public.voted_user_ids(p_event_id uuid)
+returns setof uuid
+language sql stable security definer set search_path = public
+as $$
+  select user_id from public.votes where event_id = p_event_id;
+$$;
+
+-- Total votes cast in an event (for the post-vote results page).
+create or replace function public.event_vote_count(p_event_id uuid)
+returns bigint
+language sql stable security definer set search_path = public
+as $$
+  select count(*) from public.votes where event_id = p_event_id;
+$$;
+
+revoke all on function public.is_admin() from public, anon;
+revoke all on function public.voted_user_ids(uuid) from public, anon;
+revoke all on function public.event_vote_count(uuid) from public, anon;
+grant execute on function public.is_admin() to authenticated;
+grant execute on function public.voted_user_ids(uuid) to authenticated;
+grant execute on function public.event_vote_count(uuid) to authenticated;
+
+
 -- Users can read their own votes
 create policy "Users read own votes"
   on public.votes for select
   using (auth.uid() = user_id);
 
--- Users can insert their own vote
+-- Users can insert their own vote, only while the event is open
 create policy "Users insert own vote"
   on public.votes for insert
-  with check (auth.uid() = user_id);
+  with check (
+    auth.uid() = user_id
+    and exists (
+      select 1 from public.voting_events e
+      where e.id = event_id and e.is_active
+    )
+  );
 
--- Admins read all votes (Next.js guard ensures only admins reach the page)
-create policy "Authenticated read all votes"
+-- Only admins can read every vote
+create policy "Admins read all votes"
   on public.votes for select
-  using (auth.role() = 'authenticated');
+  using (public.is_admin());
 
 
 -- ──────────────────────────────────────────────
@@ -147,10 +192,11 @@ create policy "Authenticated read admins"
   on public.admins for select
   using (auth.role() = 'authenticated');
 
--- Only existing admins can insert/delete (enforced in Next.js server actions)
-create policy "Authenticated manage admins"
+-- Only existing admins can add/remove admins
+create policy "Admins manage admins"
   on public.admins for all
-  using (auth.role() = 'authenticated');
+  using (public.is_admin())
+  with check (public.is_admin());
 
 -- Seed the initial admin
 insert into public.admins (email, added_by)
