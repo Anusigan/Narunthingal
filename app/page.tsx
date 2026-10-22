@@ -154,36 +154,32 @@ export default async function HomePage() {
 
         {/* Footer */}
         <footer
-          className="relative max-w-4xl mx-auto px-4 py-6 mt-4"
+          className="relative max-w-4xl mx-auto px-4 pt-6 pb-8 mt-4"
           style={{ borderTop: "1px solid rgba(212,160,23,0.12)" }}
         >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs" style={{ color: "rgba(245,240,232,0.25)" }}>
-              Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
-            </p>
-            <p className="text-xs" style={{ color: "rgba(212,160,23,0.35)" }}>
-              Narunthingal &apos;27
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <p className="text-xs mr-3 self-center whitespace-nowrap" style={{ color: "rgba(245,240,232,0.3)" }}>
-              Technical issues:
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <a
-                href="tel:+94775810310"
-                className="text-xs"
-                style={{ color: "rgba(212,160,23,0.5)" }}
-              >
-                Anusigan Sivananthan · +94 77 581 0310
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            {/* Left — brand & credits */}
+            <div className="flex flex-col gap-1">
+              <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "rgba(212,160,23,0.5)" }}>
+                Narunthingal &apos;27
+              </p>
+              <p className="text-xs" style={{ color: "rgba(245,240,232,0.22)" }}>
+                Developed by Anusigan Sivananthan &amp; Linushankaran Janarththanan
+              </p>
+            </div>
+
+            {/* Right — technical support */}
+            <div className="flex flex-col gap-2">
+              <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(245,240,232,0.25)" }}>
+                Technical issues
+              </p>
+              <a href="tel:+94775810310" className="flex items-center justify-between gap-8 group">
+                <span className="text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>Anusigan Sivananthan</span>
+                <span className="text-xs tabular-nums" style={{ color: "rgba(212,160,23,0.55)" }}>+94 77 581 0310</span>
               </a>
-              <span className="hidden sm:inline text-xs" style={{ color: "rgba(245,240,232,0.15)" }}>·</span>
-              <a
-                href="tel:+94779285488"
-                className="text-xs"
-                style={{ color: "rgba(212,160,23,0.5)" }}
-              >
-                Linushankaran Janarththanan · +94 77 928 5488
+              <a href="tel:+94779285488" className="flex items-center justify-between gap-8 group">
+                <span className="text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>Linushankaran Janarththanan</span>
+                <span className="text-xs tabular-nums" style={{ color: "rgba(212,160,23,0.55)" }}>+94 77 928 5488</span>
               </a>
             </div>
           </div>
