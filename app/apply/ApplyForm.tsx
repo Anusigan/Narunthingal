@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { POSITIONS } from "@/lib/types";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 interface ApplyFormProps {
@@ -46,6 +46,7 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     name: defaultName,
@@ -65,11 +66,41 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function formatPhone(raw: string) {
-    const digits = raw.replace(/\D/g, "").slice(0, 10);
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+  function getMaskedPhone(digits: string) {
+    const d = digits.slice(0, 10);
+    const p = d.padEnd(10, "_");
+    return `${p.slice(0, 3)} ${p.slice(3, 6)} ${p.slice(6)}`;
+  }
+
+  function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+    update("contact_number", digits);
+    const masked = getMaskedPhone(digits);
+    requestAnimationFrame(() => {
+      if (phoneRef.current) {
+        const pos = masked.indexOf("_");
+        const cursor = pos === -1 ? masked.length : pos;
+        phoneRef.current.setSelectionRange(cursor, cursor);
+      }
+    });
+  }
+
+  function handlePhoneKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"].includes(e.key)) return;
+    if (e.ctrlKey || e.metaKey) return;
+    if (/^\d$/.test(e.key)) return;
+    e.preventDefault();
+  }
+
+  function moveCursorToEnd() {
+    requestAnimationFrame(() => {
+      if (phoneRef.current) {
+        const masked = getMaskedPhone(form.contact_number);
+        const pos = masked.indexOf("_");
+        const cursor = pos === -1 ? masked.length : pos;
+        phoneRef.current.setSelectionRange(cursor, cursor);
+      }
+    });
   }
 
   function updateClub(index: number, field: keyof ClubRow, value: string) {
@@ -95,7 +126,7 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
     setError(null);
 
     if (!form.name.trim()) return setError("Full name is required.");
-    if (form.contact_number.replace(/\D/g, "").length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
+    if (form.contact_number.length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
     if (!form.first_preference) return setError("Please select your preferred role.");
     if (!form.confidence_reason.trim()) return setError("Please complete the suitability statement for your preferred role.");
     if (form.second_preference && !form.second_preference_reason.trim())
@@ -169,10 +200,13 @@ export default function ApplyForm({ userId, email, defaultName }: ApplyFormProps
               +94
             </span>
             <input
+              ref={phoneRef}
               className="input pl-12"
-              value={form.contact_number}
-              onChange={(e) => update("contact_number", formatPhone(e.target.value))}
-              placeholder="0__ ___ ____"
+              value={getMaskedPhone(form.contact_number)}
+              onChange={handlePhoneChange}
+              onKeyDown={handlePhoneKeyDown}
+              onFocus={moveCursorToEnd}
+              onClick={moveCursorToEnd}
               maxLength={12}
               inputMode="numeric"
             />
