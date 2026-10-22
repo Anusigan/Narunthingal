@@ -206,23 +206,15 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
         </Field>
 
         <Field label="Contact Number (WhatsApp)" required>
-          <div className="relative">
-            <span
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-sm select-none pointer-events-none"
-              style={{ color: "rgba(245,240,232,0.5)" }}
-            >
-              +94
-            </span>
-            <input
-              ref={phoneRef}
-              className="input pl-12"
-              value={formatPhoneDisplay(form.contact_number)}
-              onChange={handlePhoneChange}
-              onKeyDown={handlePhoneKeyDown}
-              placeholder="077 123 4567"
-              inputMode="numeric"
-            />
-          </div>
+          <input
+            ref={phoneRef}
+            className="input"
+            value={formatPhoneDisplay(form.contact_number)}
+            onChange={handlePhoneChange}
+            onKeyDown={handlePhoneKeyDown}
+            placeholder="077 123 4567"
+            inputMode="numeric"
+          />
         </Field>
       </div>
 
