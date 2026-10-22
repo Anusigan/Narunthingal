@@ -37,10 +37,9 @@ export default async function VoteResultsPage({
   if (!myVote) redirect("/vote");
 
   // Total votes cast for this event
-  const { count: totalVotes } = await supabase
-    .from("votes")
-    .select("*", { count: "exact", head: true })
-    .eq("event_id", eventId);
+  const { data: totalVotes } = await supabase.rpc("event_vote_count", {
+    p_event_id: eventId,
+  });
 
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;

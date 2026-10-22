@@ -72,14 +72,14 @@ export default function LiveBoard({ initialEvent }: { initialEvent: VotingEvent 
 
     async function load() {
       const [{ data: votes }, { data: ev }] = await Promise.all([
-        supabase.from("votes").select("user_id").eq("event_id", initialEvent!.id),
+        supabase.rpc("voted_user_ids", { p_event_id: initialEvent!.id }),
         supabase.from("voting_events").select("*").eq("id", initialEvent!.id).single(),
       ]);
       if (cancelled) return;
       const admins = await getAdminEmails(supabase);
       if (cancelled) return;
       setAdminEmails(admins);
-      if (votes) setVotedIds(votes.map((v) => v.user_id));
+      if (votes) setVotedIds(votes as string[]);
       if (ev) setEvent(ev as VotingEvent);
     }
 
