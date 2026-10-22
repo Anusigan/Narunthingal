@@ -102,7 +102,7 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="min-h-screen" style={{ background: "linear-gradient(175deg, #1a1200 0%, #0f0b02 18%, #090806 45%, #050403 100%)" }}>
-      <Navbar email={email} name={name} />
+      <Navbar email={email} name={name} isAdmin={true} />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="mb-6">

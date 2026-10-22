@@ -25,7 +25,7 @@ export default async function ApplyPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar email={email} name={name} />
+      <Navbar email={email} name={name} isAdmin={admin} />
 
       <div className="max-w-2xl mx-auto px-4 py-10">
         <div className="mb-8">

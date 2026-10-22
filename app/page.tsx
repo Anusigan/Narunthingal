@@ -33,7 +33,7 @@ export default async function HomePage() {
       }}
     >
       <div className="flex flex-col min-h-screen">
-        <Navbar email={email} name={name} />
+        <Navbar email={email} name={name} isAdmin={admin} />
 
         {/* Hero */}
         <div className="relative max-w-4xl mx-auto px-4 pt-14 pb-10 text-center">

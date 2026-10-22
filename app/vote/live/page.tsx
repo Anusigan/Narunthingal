@@ -25,7 +25,7 @@ export default async function LiveVotePage({
   if (!admin) {
     return (
       <div className="min-h-screen">
-        <Navbar email={email} name={name} />
+        <Navbar email={email} name={name} isAdmin={admin} />
         <div className="max-w-2xl mx-auto px-4 py-10">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-white">Live Results</h1>
@@ -56,7 +56,7 @@ export default async function LiveVotePage({
 
   return (
     <div className="min-h-screen">
-      <Navbar email={email} name={name} />
+      <Navbar email={email} name={name} isAdmin={admin} />
       <LiveBoard initialEvent={event} />
     </div>
   );

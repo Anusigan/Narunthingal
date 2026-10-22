@@ -25,7 +25,7 @@ export default async function CandidatesPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar email={email} name={name} />
+      <Navbar email={email} name={name} isAdmin={true} />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">

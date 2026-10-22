@@ -11,14 +11,15 @@ import Image from "next/image";
 interface NavbarProps {
   email: string;
   name?: string | null;
+  isAdmin?: boolean;
 }
 
-export default function Navbar({ email, name }: NavbarProps) {
+export default function Navbar({ email, name, isAdmin: isAdminProp }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [signing, setSigning] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const admin = isAdmin(email);
+  const admin = isAdminProp ?? isAdmin(email);
 
   // Announce this signed-in user on the shared presence channel
   useEffect(() => {
