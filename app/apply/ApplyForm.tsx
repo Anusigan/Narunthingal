@@ -58,6 +58,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
   const [form, setForm] = useState({
     name: defaultName,
     contact_number: "",
+    degree_pathway: "",
+    current_year: "",
     first_preference: "",
     confidence_reason: "",
     second_preference: "",
@@ -138,6 +140,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
     e.preventDefault();
     setError(null);
 
+    if (!form.degree_pathway) return setError("Please select your degree pathway.");
+    if (!form.current_year) return setError("Please select your current year.");
     if (!form.name.trim()) return setError("Full name is required.");
     if (form.contact_number.length < 10) return setError("Please enter a valid 10-digit Sri Lankan number.");
     if (!form.contact_number.startsWith("07")) return setError("Please enter a valid Sri Lankan mobile number starting with 07.");
@@ -162,6 +166,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
       user_id: userId,
       email,
       name: form.name.trim(),
+      degree_pathway: form.degree_pathway,
+      current_year: form.current_year,
       contact_number: form.contact_number.trim(),
       first_preference: form.first_preference,
       confidence_reason: form.confidence_reason.trim(),
@@ -216,6 +222,34 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
           <input className="input opacity-60 cursor-not-allowed" value={email} readOnly />
         </Field>
 
+        <Field label="Degree Pathway" required>
+          <select className="input" value={form.degree_pathway} onChange={(e) => update("degree_pathway", e.target.value)}>
+            <option value="">Select your pathway...</option>
+            <option value="Computing">Computing</option>
+            <option value="Business">Business</option>
+          </select>
+        </Field>
+
+        <Field label="Current Year" required>
+          <select className="input" value={form.current_year} onChange={(e) => update("current_year", e.target.value)}>
+            <option value="">Select your year...</option>
+            <option value="Foundation">Foundation</option>
+            <option value="First Year">First Year</option>
+            <option value="Second Year">Second Year</option>
+            <option value="Third Year (Industry Placement)">Third Year (Industry Placement)</option>
+            <option value="Final Year">Final Year</option>
+          </select>
+        </Field>
+
+        {form.current_year && form.current_year !== "Second Year" && (
+          <div className="rounded-lg px-4 py-4 text-sm" style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.3)" }}>
+            <p className="font-semibold mb-0.5" style={{ color: "#fca5a5" }}>Applications restricted</p>
+            <p style={{ color: "rgba(252,165,165,0.8)" }}>
+              Narunthingal Organizing Committee is restricted only for second year students to apply.
+            </p>
+          </div>
+        )}
+
         <Field label="Contact Number (WhatsApp)" required>
           <input
             ref={phoneRef}
@@ -228,6 +262,9 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
           />
         </Field>
       </div>
+
+      {/* Rest of form — only shown for Second Year students */}
+      {form.current_year === "Second Year" && <>
 
       {/* Role Preferences */}
       <div className="card flex flex-col gap-5">
@@ -389,6 +426,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
           />
         </Field>
       </div>
+
+      </> /* end Second Year only */}
 
       {error && (
         <div className="bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm text-red-300">
