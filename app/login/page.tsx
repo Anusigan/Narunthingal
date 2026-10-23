@@ -234,7 +234,7 @@ function LoginContent() {
       {showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}
 
       <div
-        className="min-h-screen relative flex flex-col items-center justify-center px-4 overflow-hidden"
+        className="h-screen relative flex flex-col items-center justify-center px-4 overflow-hidden"
         style={{
           opacity: visible ? 1 : 0,
           transition: "opacity 0.8s ease",
