@@ -1,10 +1,11 @@
 "use client";
 
 import { POSITIONS, type Application, type Position } from "@/lib/types";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition } from "react";
 
 interface Props {
   applications: Application[];
+  onDelete: (id: string) => Promise<void>;
 }
 
 type SortKey =
@@ -13,7 +14,7 @@ type SortKey =
   | "first_preference"
   | "volunteered_last_year";
 
-export default function CandidatesTable({ applications }: Props) {
+export default function CandidatesTable({ applications, onDelete }: Props) {
   const [search, setSearch] = useState("");
   const [filterPosition, setFilterPosition] = useState<Position | "">("");
   const [filterVolunteered, setFilterVolunteered] = useState<
@@ -22,6 +23,9 @@ export default function CandidatesTable({ applications }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>("submitted_at");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Application | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
     let list = [...applications];
@@ -270,15 +274,24 @@ export default function CandidatesTable({ applications }: Props) {
                     {new Date(a.submitted_at).toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-3">
-                    <button
-                      onClick={() =>
-                        setExpanded(expanded === a.id ? null : a.id)
-                      }
-                      className="text-xs transition-colors"
-                      style={{ color: "#D4A017" }}
-                    >
-                      {expanded === a.id ? "▲ Hide" : "▼ View"}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() =>
+                          setExpanded(expanded === a.id ? null : a.id)
+                        }
+                        className="text-xs transition-colors"
+                        style={{ color: "#D4A017" }}
+                      >
+                        {expanded === a.id ? "▲ Hide" : "▼ View"}
+                      </button>
+                      <button
+                        onClick={() => { setConfirmDelete(a); setDeleteError(null); }}
+                        className="text-xs transition-colors"
+                        style={{ color: "#f87171" }}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </td>
                 </tr>
 
@@ -318,6 +331,49 @@ export default function CandidatesTable({ applications }: Props) {
           </tbody>
         </table>
       </div>
+      {/* Remove confirmation dialog */}
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 flex flex-col gap-4" style={{ background: "rgba(11,8,4,0.97)", border: "1px solid rgba(248,113,113,0.25)", boxShadow: "0 32px 80px rgba(0,0,0,0.8)" }}>
+            <div>
+              <p className="text-base font-semibold text-white mb-1">Remove application?</p>
+              <p className="text-sm" style={{ color: "rgba(245,240,232,0.55)" }}>
+                This will delete <span className="text-white font-medium">{confirmDelete.name}</span>&apos;s application and allow them to resubmit.
+              </p>
+              {deleteError && (
+                <p className="text-xs mt-2" style={{ color: "#f87171" }}>{deleteError}</p>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <button
+                disabled={isPending}
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 rounded-xl px-4 py-2.5 text-sm font-medium"
+                style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(245,240,232,0.6)" }}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isPending}
+                onClick={() => {
+                  startTransition(async () => {
+                    try {
+                      await onDelete(confirmDelete.id);
+                      setConfirmDelete(null);
+                    } catch (e) {
+                      setDeleteError(e instanceof Error ? e.message : "Failed to remove");
+                    }
+                  });
+                }}
+                className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold"
+                style={{ background: "rgba(220,38,38,0.15)", border: "1px solid rgba(220,38,38,0.4)", color: "#fca5a5" }}
+              >
+                {isPending ? "Removing..." : "Yes, remove"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

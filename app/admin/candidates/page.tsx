@@ -4,6 +4,7 @@ import Unauthorized from "@/components/Unauthorized";
 import { isAdminAsync } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
 import CandidatesTable from "./CandidatesTable";
+import { deleteApplication } from "./actions";
 import type { Application } from "@/lib/types";
 
 export default async function CandidatesPage() {
@@ -38,7 +39,7 @@ export default async function CandidatesPage() {
           </div>
         </div>
 
-        <CandidatesTable applications={(applications as Application[]) ?? []} />
+        <CandidatesTable applications={(applications as Application[]) ?? []} onDelete={deleteApplication} />
       </div>
     </div>
   );
