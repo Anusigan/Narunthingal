@@ -250,6 +250,13 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
           </div>
         )}
 
+      </div>
+
+      {/* Rest of form — only shown for Second Year students */}
+      {form.current_year === "Second Year" && <>
+
+      {/* Personal info continued */}
+      <div className="card flex flex-col gap-5">
         <Field label="Contact Number (WhatsApp)" required>
           <input
             ref={phoneRef}
@@ -262,9 +269,6 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
           />
         </Field>
       </div>
-
-      {/* Rest of form — only shown for Second Year students */}
-      {form.current_year === "Second Year" && <>
 
       {/* Role Preferences */}
       <div className="card flex flex-col gap-5">
@@ -427,8 +431,6 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
         </Field>
       </div>
 
-      </> /* end Second Year only */}
-
       {error && (
         <div className="bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 text-sm text-red-300">
           {error}
@@ -442,6 +444,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
       <p className="text-xs text-center" style={{ color: "rgba(212,160,23,0.4)" }}>
         Applications are final once submitted. Please ensure all information is accurate before proceeding.
       </p>
+
+      </> /* end Second Year only */}
 
       {/* Confirmation dialog */}
       {showConfirm && (
