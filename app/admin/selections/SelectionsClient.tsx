@@ -43,16 +43,24 @@ export default function SelectionsClient({ applicants, selections: initialSelect
     localSelections.filter((s) => s.role === activeRole).map((s) => s.application_id)
   );
 
+  // Map of applicant_id → already-selected role across ALL roles (for conflict detection)
+  const selectedRoleByApplicant = new Map<string, string>(
+    localSelections.map((s) => [s.application_id, s.role])
+  );
+
   // Count selections per role for summary
   const selectionCountByRole = POSITIONS.reduce<Record<string, number>>((acc, pos) => {
     acc[pos] = localSelections.filter((s) => s.role === pos).length;
     return acc;
   }, {});
 
-  // Candidates for active role (1st pref first, then 2nd pref only)
+  // Candidates for active role — selected first, then 1st pref, then 2nd pref
   const roleApplicants = applicants
     .filter((a) => a.first_preference === activeRole || a.second_preference === activeRole)
     .sort((a, b) => {
+      const aSelected = selectedIds.has(a.id) ? 0 : 1;
+      const bSelected = selectedIds.has(b.id) ? 0 : 1;
+      if (aSelected !== bSelected) return aSelected - bSelected;
       const aFirst = a.first_preference === activeRole ? 0 : 1;
       const bFirst = b.first_preference === activeRole ? 0 : 1;
       return aFirst - bFirst;
@@ -61,6 +69,15 @@ export default function SelectionsClient({ applicants, selections: initialSelect
   function toggleSelection(applicant: Applicant) {
     setActionError(null);
     const isSelected = selectedIds.has(applicant.id);
+
+    if (!isSelected) {
+      // Check if already selected for a different role
+      const existingRole = selectedRoleByApplicant.get(applicant.id);
+      if (existingRole && existingRole !== activeRole) {
+        setActionError(`${applicant.name} is already selected for ${existingRole}`);
+        return;
+      }
+    }
 
     // Optimistic update — instant UI change
     if (isSelected) {
@@ -158,16 +175,20 @@ export default function SelectionsClient({ applicants, selections: initialSelect
 
         {/* Candidates panel */}
         <div className="flex-1 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold text-white">{activeRole}</h2>
               <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.4)" }}>
-                {roleApplicants.length} applicant{roleApplicants.length !== 1 ? "s" : ""} ·{" "}
-                {selectedIds.size} selected
+                {roleApplicants.length} applicant{roleApplicants.length !== 1 ? "s" : ""}
+                {selectedIds.size > 0 ? (
+                  <span style={{ color: "#4ade80" }}> · {selectedIds.size} selected</span>
+                ) : (
+                  <span> · none selected</span>
+                )}
               </p>
             </div>
             {actionError && (
-              <p className="text-xs" style={{ color: "#f87171" }}>{actionError}</p>
+              <p className="text-xs text-right max-w-xs" style={{ color: "#f87171" }}>{actionError}</p>
             )}
           </div>
 
@@ -176,16 +197,27 @@ export default function SelectionsClient({ applicants, selections: initialSelect
               No applicants for this role yet.
             </div>
           ) : (
-            roleApplicants.map((a) => {
+            roleApplicants.map((a, idx) => {
+              const prevSelected = idx > 0 && selectedIds.has(roleApplicants[idx - 1].id);
+              const thisSelected = selectedIds.has(a.id);
+              const showDivider = !thisSelected && prevSelected;
               const isSelected = selectedIds.has(a.id);
               const isPrimary = a.first_preference === activeRole;
+              const conflictRole = !isSelected ? selectedRoleByApplicant.get(a.id) : undefined;
               return (
+                <div key={a.id}>
+                  {showDivider && (
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+                      <span className="text-xs" style={{ color: "rgba(245,240,232,0.25)" }}>Not yet selected</span>
+                      <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+                    </div>
+                  )}
                 <div
-                  key={a.id}
                   className="card flex flex-col gap-3"
                   style={{
-                    borderColor: isSelected ? "rgba(74,222,128,0.35)" : "rgba(212,160,23,0.12)",
-                    background: isSelected ? "rgba(74,222,128,0.04)" : undefined,
+                    borderColor: isSelected ? "rgba(74,222,128,0.35)" : conflictRole ? "rgba(248,113,113,0.2)" : "rgba(212,160,23,0.12)",
+                    background: isSelected ? "rgba(74,222,128,0.04)" : conflictRole ? "rgba(248,113,113,0.03)" : undefined,
                   }}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -215,6 +247,14 @@ export default function SelectionsClient({ applicants, selections: initialSelect
                             Volunteered before
                           </span>
                         )}
+                        {conflictRole && (
+                          <span
+                            className="text-xs rounded-full px-2 py-0.5"
+                            style={{ background: "rgba(248,113,113,0.1)", color: "#f87171", border: "1px solid rgba(248,113,113,0.25)" }}
+                          >
+                            Selected for {conflictRole}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.4)" }}>{a.email}</p>
                     </div>
@@ -225,13 +265,18 @@ export default function SelectionsClient({ applicants, selections: initialSelect
                         background: "rgba(74,222,128,0.12)",
                         border: "1px solid rgba(74,222,128,0.35)",
                         color: "#4ade80",
+                      } : conflictRole ? {
+                        background: "rgba(248,113,113,0.06)",
+                        border: "1px solid rgba(248,113,113,0.2)",
+                        color: "rgba(248,113,113,0.5)",
+                        cursor: "not-allowed",
                       } : {
                         background: "rgba(212,160,23,0.08)",
                         border: "1px solid rgba(212,160,23,0.25)",
                         color: "#D4A017",
                       }}
                     >
-                      {isSelected ? "✓ Selected · Undo" : "Select"}
+                      {isSelected ? "✓ Selected · Undo" : conflictRole ? "Taken" : "Select"}
                     </button>
                   </div>
 
@@ -265,6 +310,7 @@ export default function SelectionsClient({ applicants, selections: initialSelect
                       </div>
                     )}
                   </div>
+                </div>
                 </div>
               );
             })
