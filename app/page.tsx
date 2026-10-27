@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { isAdminAsync } from "@/lib/admin";
+import DeadlineCountdown from "@/components/DeadlineCountdown";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -45,6 +46,7 @@ export default async function HomePage() {
           <p className="text-sm" style={{ color: "rgba(245,240,232,0.5)" }}>
             Welcome, {name ?? email.split("@")[0]}
           </p>
+          <DeadlineCountdown />
         </div>
 
         {/* Cards */}
