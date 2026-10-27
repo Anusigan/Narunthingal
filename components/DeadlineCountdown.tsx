@@ -31,7 +31,7 @@ export default function DeadlineCountdown() {
       className="flex items-center justify-center gap-2 flex-wrap mt-3"
     >
       <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(212,160,23,0.55)" }}>
-        Applications close in
+        Application closes in
       </span>
       <div className="flex items-center gap-1.5">
         {[
