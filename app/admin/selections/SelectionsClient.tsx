@@ -29,20 +29,23 @@ interface Props {
   selections: Selection[];
 }
 
-export default function SelectionsClient({ applicants, selections }: Props) {
+export default function SelectionsClient({ applicants, selections: initialSelections }: Props) {
   const [activeRole, setActiveRole] = useState<Position>(POSITIONS[0]);
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [actionError, setActionError] = useState<string | null>(null);
+
+  // Optimistic local state — updates instantly on click
+  const [localSelections, setLocalSelections] = useState<Selection[]>(initialSelections);
 
   // Build a set of selected application_ids for current role
   const selectedIds = new Set(
-    selections.filter((s) => s.role === activeRole).map((s) => s.application_id)
+    localSelections.filter((s) => s.role === activeRole).map((s) => s.application_id)
   );
 
   // Count selections per role for summary
   const selectionCountByRole = POSITIONS.reduce<Record<string, number>>((acc, pos) => {
-    acc[pos] = selections.filter((s) => s.role === pos).length;
+    acc[pos] = localSelections.filter((s) => s.role === pos).length;
     return acc;
   }, {});
 
@@ -58,6 +61,20 @@ export default function SelectionsClient({ applicants, selections }: Props) {
   function toggleSelection(applicant: Applicant) {
     setActionError(null);
     const isSelected = selectedIds.has(applicant.id);
+
+    // Optimistic update — instant UI change
+    if (isSelected) {
+      setLocalSelections((prev) =>
+        prev.filter((s) => !(s.application_id === applicant.id && s.role === activeRole))
+      );
+    } else {
+      setLocalSelections((prev) => [
+        ...prev,
+        { application_id: applicant.id, role: activeRole, selected_by: "", selected_at: new Date().toISOString() },
+      ]);
+    }
+
+    // Sync with server in background
     startTransition(async () => {
       try {
         if (isSelected) {
@@ -66,12 +83,14 @@ export default function SelectionsClient({ applicants, selections }: Props) {
           await selectCandidate(applicant.id, activeRole);
         }
       } catch (e) {
+        // Revert on error
+        setLocalSelections(initialSelections);
         setActionError(e instanceof Error ? e.message : "Something went wrong");
       }
     });
   }
 
-  const totalSelected = selections.length;
+  const totalSelected = localSelections.length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -200,7 +219,6 @@ export default function SelectionsClient({ applicants, selections }: Props) {
                       <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.4)" }}>{a.email}</p>
                     </div>
                     <button
-                      disabled={isPending}
                       onClick={() => toggleSelection(a)}
                       className="shrink-0 rounded-xl px-4 py-2 text-sm font-medium transition-all"
                       style={isSelected ? {
@@ -213,7 +231,7 @@ export default function SelectionsClient({ applicants, selections }: Props) {
                         color: "#D4A017",
                       }}
                     >
-                      {isSelected ? "✓ Selected" : "Select"}
+                      {isSelected ? "✓ Selected · Undo" : "Select"}
                     </button>
                   </div>
 
