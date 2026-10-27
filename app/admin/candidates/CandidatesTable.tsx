@@ -210,6 +210,7 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
                 1st Pref <SortIcon col="first_preference" />
               </th>
               <th className="px-4 py-3 whitespace-nowrap">2nd Pref</th>
+              <th className="px-4 py-3 whitespace-nowrap">Degree</th>
               <th
                 className="px-4 py-3 cursor-pointer hover:text-white whitespace-nowrap"
                 onClick={() => toggleSort("volunteered_last_year")}
@@ -229,7 +230,7 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
             {filtered.length === 0 && (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-12"
                   style={{ color: "rgba(245,240,232,0.4)" }}
                 >
@@ -260,6 +261,11 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
                   </td>
                   <td className="px-4 py-3 text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>
                     {a.second_preference ?? (
+                      <span style={{ color: "rgba(245,240,232,0.2)" }}>—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: "rgba(245,240,232,0.6)" }}>
+                    {(a as any).degree_pathway ?? (
                       <span style={{ color: "rgba(245,240,232,0.2)" }}>—</span>
                     )}
                   </td>
