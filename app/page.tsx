@@ -121,7 +121,7 @@ export default async function HomePage() {
 
           {/* Admin — occupies full grid width, then splits into its own 3-col row */}
           {admin && (
-            <div className="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin — Candidates</h2>
@@ -131,6 +131,18 @@ export default async function HomePage() {
                 </div>
                 <Link href="/admin/candidates" className="btn-secondary text-center mt-auto block">
                   View Applications
+                </Link>
+              </div>
+
+              <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
+                <div>
+                  <h2 className="text-lg font-semibold text-white mb-1">Admin — Selections</h2>
+                  <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
+                    Review applicants per role and mark your final selections.
+                  </p>
+                </div>
+                <Link href="/admin/selections" className="btn-secondary text-center mt-auto block">
+                  Manage Selections
                 </Link>
               </div>
 
