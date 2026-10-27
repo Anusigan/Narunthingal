@@ -41,7 +41,11 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
 
     // Filter by position
     if (filterPosition) {
-      list = list.filter((a) => a.first_preference === filterPosition);
+      list = list.filter(
+        (a) =>
+          a.first_preference === filterPosition ||
+          a.second_preference === filterPosition
+      );
     }
 
     // Filter by volunteered
