@@ -4,6 +4,9 @@ import Navbar from "@/components/Navbar";
 import ApplyForm from "./ApplyForm";
 import { isAdminAsync } from "@/lib/admin";
 
+// Wednesday 28 Oct 2026 20:00 Sri Lanka time (UTC+5:30)
+const APPLICATION_DEADLINE = new Date("2026-10-28T14:30:00Z");
+
 export default async function ApplyPage() {
   const supabase = await createClient();
   const {
@@ -22,6 +25,35 @@ export default async function ApplyPage() {
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;
   const admin = await isAdminAsync(email, supabase);
+  const deadlinePassed = !admin && new Date() >= APPLICATION_DEADLINE;
+
+  if (deadlinePassed) {
+    return (
+      <div
+        className="min-h-screen"
+        style={{ background: "linear-gradient(175deg, #1a1200 0%, #0f0b02 18%, #090806 45%, #050403 100%)" }}
+      >
+        <Navbar email={email} name={name} isAdmin={admin} />
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">
+          <div
+            className="rounded-2xl px-8 py-10 max-w-md w-full"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(212,160,23,0.2)" }}
+          >
+            <p className="text-4xl mb-4">🔒</p>
+            <h1 className="text-2xl font-bold text-white mb-2">Applications Closed</h1>
+            <div className="gold-divider max-w-[80px] mx-auto my-4" />
+            <p className="text-sm" style={{ color: "rgba(245,240,232,0.55)" }}>
+              Applying for <span className="text-white font-medium">Narunthingal &apos;27</span> is now closed.
+              The deadline was <span className="text-white">Wednesday 28 October 2026 at 8:00 PM</span> (Sri Lanka time).
+            </p>
+            <p className="text-sm mt-4" style={{ color: "rgba(245,240,232,0.35)" }}>
+              If you have any questions, please contact the admin team.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

@@ -22,6 +22,10 @@ export default async function HomePage() {
   const name = user.user_metadata?.full_name as string | undefined;
   const admin = await isAdminAsync(email, supabase);
 
+  // Wednesday 28 Oct 2026 20:00 Sri Lanka time (UTC+5:30)
+  const APPLICATION_DEADLINE = new Date("2026-10-28T14:30:00Z");
+  const deadlinePassed = new Date() >= APPLICATION_DEADLINE;
+
   const { data: application } = await supabase
     .from("applications")
     .select("id, first_preference, submitted_at")
@@ -93,6 +97,16 @@ export default async function HomePage() {
                 </p>
                 <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.35)" }}>
                   Submitted {new Date(application.submitted_at).toLocaleDateString()}
+                </p>
+              </div>
+            ) : deadlinePassed ? (
+              <div
+                className="rounded-lg px-4 py-3 text-sm"
+                style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.25)" }}
+              >
+                <p className="font-medium" style={{ color: "#fca5a5" }}>🔒 Applications closed</p>
+                <p className="mt-1 text-xs" style={{ color: "rgba(252,165,165,0.65)" }}>
+                  Deadline was 28 Oct 2026 at 8:00 PM
                 </p>
               </div>
             ) : (

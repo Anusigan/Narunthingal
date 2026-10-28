@@ -43,22 +43,11 @@ function Field({
   );
 }
 
-// Wednesday 28 Oct 2026 20:00 Sri Lanka time (UTC+5:30)
-const APPLICATION_DEADLINE = new Date("2026-10-28T14:30:00Z");
-
 export default function ApplyForm({ userId, email, defaultName, isAdmin }: ApplyFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [now, setNow] = useState(() => new Date());
-
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 10000);
-    return () => clearInterval(id);
-  }, []);
-
-  const deadlinePassed = !isAdmin && now >= APPLICATION_DEADLINE;
 
   useEffect(() => {
     document.body.style.overflow = showConfirm ? "hidden" : "";
@@ -150,7 +139,6 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (deadlinePassed) return setError("Applications are now closed.");
 
     if (!form.degree_pathway) return setError("Please select your degree pathway.");
     if (!form.current_year) return setError("Please select your current year.");
@@ -214,15 +202,6 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-
-      {deadlinePassed && (
-        <div className="rounded-xl px-5 py-4 text-sm" style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.35)" }}>
-          <p className="font-semibold text-base mb-1" style={{ color: "#fca5a5" }}>Applications are now closed</p>
-          <p style={{ color: "rgba(252,165,165,0.75)" }}>
-            The deadline was Wednesday 28 October 2026 at 8:00 PM (Sri Lanka time). No further submissions are accepted.
-          </p>
-        </div>
-      )}
 
       {/* Personal Information */}
       <div className="card flex flex-col gap-5">
@@ -458,8 +437,8 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
         </div>
       )}
 
-      <button type="submit" disabled={submitting || deadlinePassed} className="btn-primary" style={deadlinePassed ? { opacity: 0.4, cursor: "not-allowed" } : {}}>
-        {submitting ? "Submitting..." : deadlinePassed ? "Applications Closed" : "Submit Application"}
+      <button type="submit" disabled={submitting} className="btn-primary">
+        {submitting ? "Submitting..." : "Submit Application"}
       </button>
 
       <p className="text-xs text-center" style={{ color: "rgba(212,160,23,0.4)" }}>
