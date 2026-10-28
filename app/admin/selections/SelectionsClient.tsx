@@ -109,6 +109,10 @@ export default function SelectionsClient({ applicants, selections: initialSelect
 
   const totalSelected = localSelections.length;
 
+  // Applicants not selected for ANY role
+  const selectedAppIds = new Set(localSelections.map((s) => s.application_id));
+  const unselectedApplicants = applicants.filter((a) => !selectedAppIds.has(a.id));
+
   return (
     <div className="flex flex-col gap-6">
       {/* Summary bar */}
@@ -170,6 +174,34 @@ export default function SelectionsClient({ applicants, selections: initialSelect
                 </button>
               );
             })}
+          </div>
+
+          {/* Unselected people */}
+          <div className="card p-2 flex flex-col gap-1 mt-3">
+            <p className="text-xs uppercase tracking-widest px-2 py-1" style={{ color: "rgba(245,240,232,0.35)" }}>
+              Unselected{" "}
+              <span className="font-bold" style={{ color: unselectedApplicants.length > 0 ? "#f87171" : "#4ade80" }}>
+                {unselectedApplicants.length}
+              </span>
+            </p>
+            {unselectedApplicants.length === 0 ? (
+              <p className="text-xs px-2 py-1" style={{ color: "rgba(74,222,128,0.6)" }}>Everyone selected ✓</p>
+            ) : (
+              unselectedApplicants.map((a) => (
+                <button
+                  key={a.id}
+                  onClick={() => { setActiveRole(a.first_preference as Position); setExpanded(null); }}
+                  className="flex flex-col rounded-lg px-3 py-2 text-left transition-colors w-full"
+                  style={{ color: "rgba(245,240,232,0.55)" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = ""; }}
+                  title={`Jump to ${a.first_preference}`}
+                >
+                  <span className="text-xs font-medium truncate text-white">{a.name}</span>
+                  <span className="text-xs truncate" style={{ color: "rgba(245,240,232,0.35)" }}>{a.first_preference}</span>
+                </button>
+              ))
+            )}
           </div>
         </div>
 
