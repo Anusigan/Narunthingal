@@ -176,7 +176,7 @@ export default function VolunteerForm() {
             Avenues you&apos;d like to volunteer for <span style={{ color: "#D4A017" }}>*</span>
           </label>
           <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>
-            Select up to 2 — you must explain your fit for each one selected
+            Select up to 2. You must explain your fit for each one selected.
           </p>
           <div className="grid grid-cols-2 gap-2 mt-1">
             {AVENUES.map((avenue) => {
@@ -218,7 +218,7 @@ export default function VolunteerForm() {
               Why are you a good fit for <span style={{ color: "#D4A017" }}>{avenue}</span>?{" "}
               <span style={{ color: "#D4A017" }}>*</span>
             </label>
-            <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>Keep it brief — 2–3 sentences</p>
+            <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>Keep it brief (2–3 sentences)</p>
             <textarea
               className="input resize-none"
               rows={3}

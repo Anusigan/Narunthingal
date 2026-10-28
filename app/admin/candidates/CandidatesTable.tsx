@@ -261,12 +261,12 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
                   </td>
                   <td className="px-4 py-3 text-xs" style={{ color: "rgba(245,240,232,0.45)" }}>
                     {a.second_preference ?? (
-                      <span style={{ color: "rgba(245,240,232,0.2)" }}>—</span>
+                      <span style={{ color: "rgba(245,240,232,0.2)" }}>None</span>
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: "rgba(245,240,232,0.6)" }}>
                     {(a as any).degree_pathway ?? (
-                      <span style={{ color: "rgba(245,240,232,0.2)" }}>—</span>
+                      <span style={{ color: "rgba(245,240,232,0.2)" }}>None</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -309,11 +309,11 @@ export default function CandidatesTable({ applications, onDelete }: Props) {
                   <tr key={`${a.id}-expanded`} style={{ background: "rgba(212,160,23,0.04)" }}>
                     <td colSpan={7} className="px-6 py-5">
                       <div className="grid sm:grid-cols-2 gap-5">
-                        <Detail label={`Suitability — ${a.first_preference}`}>
+                        <Detail label={`Suitability: ${a.first_preference}`}>
                           {a.confidence_reason}
                         </Detail>
                         {a.second_preference && a.second_preference_reason && (
-                          <Detail label={`Suitability — ${a.second_preference}`}>
+                          <Detail label={`Suitability: ${a.second_preference}`}>
                             {a.second_preference_reason}
                           </Detail>
                         )}

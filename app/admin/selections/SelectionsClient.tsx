@@ -325,7 +325,7 @@ export default function SelectionsClient({ applicants, selections: initialSelect
                       <div className="mt-3 flex flex-col gap-3">
                         <div>
                           <p className="text-xs uppercase tracking-wide mb-1" style={{ color: "rgba(212,160,23,0.5)" }}>
-                            Why suitable — {isPrimary ? a.first_preference : a.second_preference}
+                            Why suitable: {isPrimary ? a.first_preference : a.second_preference}
                           </p>
                           <p className="text-sm whitespace-pre-wrap" style={{ color: "rgba(245,240,232,0.7)" }}>
                             {isPrimary ? a.confidence_reason : (a.second_preference_reason ?? a.confidence_reason)}

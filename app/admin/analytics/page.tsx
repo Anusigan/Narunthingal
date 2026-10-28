@@ -168,7 +168,7 @@ export default async function AnalyticsPage() {
           <div className="mb-4">
             <h2 className="text-base font-semibold text-white">Submission Activity</h2>
             <p className="text-xs mt-0.5" style={{ color: "rgba(245,240,232,0.4)" }}>
-              Applications submitted per day — last 14 days
+              Applications submitted per day (last 14 days)
             </p>
           </div>
           <div className="flex items-end gap-1 h-20">
@@ -224,7 +224,7 @@ export default async function AnalyticsPage() {
                   </div>
                   <div className="flex items-center gap-4 text-sm shrink-0">
                     <span style={{ color: "rgba(245,240,232,0.45)" }}>
-                      {e.cast} / {e.eligible > 0 ? e.eligible : "—"} votes
+                      {e.cast} / {e.eligible > 0 ? e.eligible : "?"} votes
                     </span>
                     {e.turnout !== null ? (
                       <span
@@ -234,7 +234,7 @@ export default async function AnalyticsPage() {
                         {e.turnout}%
                       </span>
                     ) : (
-                      <span style={{ color: "rgba(245,240,232,0.3)" }}>—</span>
+                      <span style={{ color: "rgba(245,240,232,0.3)" }}>N/A</span>
                     )}
                   </div>
                 </div>

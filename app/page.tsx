@@ -160,7 +160,7 @@ export default async function HomePage() {
             <div className="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Admin — Candidates</h2>
+                  <h2 className="text-lg font-semibold text-white mb-1">Admin: Candidates</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     View, filter, sort, and search all submitted applications.
                   </p>
@@ -172,7 +172,7 @@ export default async function HomePage() {
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Admin — Selections</h2>
+                  <h2 className="text-lg font-semibold text-white mb-1">Admin: Selections</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     Review applicants per role and mark your final selections.
                   </p>
@@ -184,7 +184,7 @@ export default async function HomePage() {
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Admin — Voting</h2>
+                  <h2 className="text-lg font-semibold text-white mb-1">Admin: Voting</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     Create voting events, manage candidates, and see live results.
                   </p>
@@ -196,7 +196,7 @@ export default async function HomePage() {
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Admin — Access</h2>
+                  <h2 className="text-lg font-semibold text-white mb-1">Admin: Access</h2>
                   <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
                     Add or remove admin access for other IIT email addresses.
                   </p>

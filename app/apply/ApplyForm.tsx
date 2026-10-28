@@ -133,7 +133,7 @@ export default function ApplyForm({ userId, email, defaultName, isAdmin }: Apply
   function serializeClubs(): string | null {
     const filled = clubs.filter((r) => r.club.trim());
     if (filled.length === 0) return null;
-    return filled.map((r) => r.position.trim() ? `${r.club.trim()} — ${r.position.trim()}` : r.club.trim()).join("\n");
+    return filled.map((r) => r.position.trim() ? `${r.club.trim()}: ${r.position.trim()}` : r.club.trim()).join("\n");
   }
 
   function handleSubmit(e: React.FormEvent) {
