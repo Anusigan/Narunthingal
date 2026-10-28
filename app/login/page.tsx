@@ -3,12 +3,11 @@
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import Image from "next/image";
 
 // TEMPORARY: while true, Google sign-in is admin-only and the three
 // test voter accounts sign in with email + password instead.
 const TEST_MODE = process.env.NEXT_PUBLIC_TEST_MODE === "true";
-
-const SPLASH_EN = "NARUNTHINGAL".split("");
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
   useEffect(() => {
@@ -20,7 +19,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
     <div className="sp">
       <div className="sp-glow" />
 
-      {/* Kolam geometric pattern — draws itself, then text appears over it */}
+      {/* Kolam geometric pattern — draws itself, then sketched logo appears directly in the center */}
       <svg className="sp-kolam" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
            fill="none" strokeLinecap="round" strokeLinejoin="round">
         {/* Outer octagon */}
@@ -74,22 +73,19 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
         <circle cx="200" cy="200" r="5" fill="#E8B820" className="spk-dot"/>
       </svg>
 
-      {/* Hero text */}
-      <div className="sp-word" aria-label="Narunthingal">
-        {SPLASH_EN.map((l, i) => (
-          <span key={i} className="sp-letter" style={{ animationDelay: `${1500 + i * 68}ms` }}>
-            {l}
-          </span>
-        ))}
+      {/* Only the sketched logo in the center, shifted slightly down for optical balance */}
+      <div className="sp-logo-box">
+        <Image
+          src="/narunthingal_sketched_logo.png"
+          alt="Narunthingal"
+          width={620}
+          height={185}
+          className="sp-logo-img"
+          priority
+        />
       </div>
 
-      <div className="sp-rule" />
-      <p className="sp-year">2 0 2 7</p>
-      <p className="sp-tag">Organizing Committee Portal</p>
-
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
-
         .sp {
           position: fixed; inset: 0; z-index: 100; background: #080706;
           display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -101,7 +97,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
         .sp-glow {
           position: absolute; inset: 0; pointer-events: none;
           background: radial-gradient(ellipse 55% 45% at 50% 50%,
-            rgba(212,160,23,0.14) 0%, transparent 65%);
+            rgba(212,160,23,0.18) 0%, transparent 65%);
           animation: spGlow 5.4s ease forwards;
         }
         @keyframes spGlow {
@@ -110,7 +106,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
         /* Kolam SVG */
         .sp-kolam {
-          position: absolute; width: min(440px, 90vw); height: min(440px, 90vw); pointer-events: none;
+          position: absolute; width: min(470px, 92vw); height: min(470px, 92vw); pointer-events: none;
           opacity: 0; animation: spKolam 5.4s ease forwards;
         }
         @keyframes spKolam {
@@ -137,43 +133,22 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
         @keyframes spDraw { to { stroke-dashoffset: 0; } }
         @keyframes spFd   { to { opacity: 1; } }
 
-        /* Hero word */
-        .sp-word { position: relative; z-index: 2; display: flex; gap: 0; }
-        .sp-letter {
-          font-family: 'Cinzel Decorative', 'Times New Roman', serif;
-          font-size: clamp(1.4rem, 5.5vw, 2.4rem); font-weight: 700; letter-spacing: 0.08em;
-          color: #E8B820;
-          text-shadow:
-            0 0 14px rgba(232,184,32,1),
-            0 0 40px rgba(212,160,23,0.55),
-            0 0 80px rgba(212,160,23,0.2);
-          opacity: 0; transform: translateY(10px);
-          animation: spLetterIn 0.45s ease-out forwards;
+        /* Sketched Logo Centerpiece - centered and nudged slightly down for optical balance */
+        .sp-logo-box {
+          position: relative; z-index: 2; display: flex; justify-content: center; align-items: center;
+          margin-top: 4px;
         }
-        @keyframes spLetterIn { to { opacity: 1; transform: translateY(0); } }
-
-        .sp-rule {
-          position: relative; z-index: 2; height: 1px; width: 0; margin: 18px 0 0;
-          background: linear-gradient(90deg, transparent, rgba(212,160,23,0.6) 50%, transparent);
-          animation: spRule 0.55s ease 2.7s forwards;
+        .sp-logo-img {
+          width: min(540px, 88vw); height: auto; object-fit: contain;
+          opacity: 0; transform: translateY(4px) scale(0.95);
+          filter: drop-shadow(0 0 30px rgba(232,184,32,0.75)) drop-shadow(0 0 65px rgba(212,160,23,0.42));
+          animation: spLogoIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
         }
-        @keyframes spRule { from { width:0; opacity:0; } to { width:220px; opacity:1; } }
-
-        .sp-year {
-          position: relative; z-index: 2; margin: 14px 0 0;
-          font-size: 0.65rem; font-weight: 300; letter-spacing: 0.45em;
-          color: rgba(212,160,23,0.5); opacity: 0;
-          animation: spFadeUp 0.55s ease 3.0s forwards;
-        }
-        .sp-tag {
-          position: relative; z-index: 2; margin: 8px 0 0;
-          font-size: 0.52rem; font-weight: 400; letter-spacing: 0.2em;
-          text-transform: uppercase; color: rgba(212,160,23,0.25); opacity: 0;
-          animation: spFadeUp 0.55s ease 3.3s forwards;
-        }
-        @keyframes spFadeUp {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes spLogoIn {
+          to {
+            opacity: 1;
+            transform: translateY(4px) scale(1);
+          }
         }
       `}</style>
     </div>
@@ -252,8 +227,27 @@ function LoginContent() {
           }}
         />
 
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full max-w-sm">
           {/* Logo + title */}
+          <div className="flex flex-col items-center mb-6 text-center">
+            <div className="relative flex justify-center mb-2">
+              <div
+                className="absolute inset-0 blur-xl opacity-60 -z-10"
+                style={{ background: "radial-gradient(circle, rgba(212,160,23,0.5) 0%, transparent 70%)" }}
+              />
+              <Image
+                src="/narunthingal_sketched_logo.png"
+                alt="Narunthingal Logo"
+                width={260}
+                height={75}
+                className="h-14 sm:h-16 w-auto object-contain drop-shadow-[0_4px_18px_rgba(212,160,23,0.4)]"
+                priority
+              />
+            </div>
+            <p className="text-xs uppercase tracking-[0.25em] font-medium" style={{ color: "rgba(212,160,23,0.7)" }}>
+              Organizing Committee &apos;27
+            </p>
+          </div>
 
           {/* Sign-in card */}
           <div

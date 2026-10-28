@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { isAdminAsync } from "@/lib/admin";
 import DeadlineCountdown from "@/components/DeadlineCountdown";
@@ -8,6 +9,13 @@ import DeadlineCountdown from "@/components/DeadlineCountdown";
 export default async function HomePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+
+
+
+
+
+
   if (!user) redirect("/login");
 
   const email = user.email!;
@@ -37,8 +45,22 @@ export default async function HomePage() {
         <Navbar email={email} name={name} isAdmin={admin} />
 
         {/* Hero */}
-        <div className="relative max-w-4xl mx-auto px-4 pt-14 pb-10 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-1">
+        <div className="relative max-w-4xl mx-auto px-4 pt-12 pb-10 text-center flex flex-col items-center">
+          <div className="relative mb-3 flex justify-center">
+            <div
+              className="absolute inset-0 blur-2xl opacity-40 -z-10"
+              style={{ background: "radial-gradient(circle, rgba(212,160,23,0.45) 0%, transparent 70%)" }}
+            />
+            <Image
+              src="/narunthingal_sketched_logo.png"
+              alt="Narunthingal"
+              width={340}
+              height={96}
+              className="h-16 sm:h-20 w-auto object-contain drop-shadow-[0_4px_24px_rgba(212,160,23,0.35)]"
+              priority
+            />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-1">
             Narunthingal{" "}
             <span style={{ color: "#D4A017" }}>&apos;27</span>
           </h1>
