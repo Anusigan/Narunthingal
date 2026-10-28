@@ -24,18 +24,34 @@ export default function VolunteerForm() {
     contact_number: "",
     degree_pathway: "",
     current_year: "",
-    suitability_reason: "",
   });
+
+  // Max 2 avenues; reasons keyed by avenue name
   const [selectedAvenues, setSelectedAvenues] = useState<string[]>([]);
+  const [reasons, setReasons] = useState<Record<string, string>>({});
 
   function update(field: string, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
   function toggleAvenue(avenue: string) {
-    setSelectedAvenues((prev) =>
-      prev.includes(avenue) ? prev.filter((a) => a !== avenue) : [...prev, avenue]
-    );
+    setSelectedAvenues((prev) => {
+      if (prev.includes(avenue)) {
+        // Deselect — remove reason too
+        setReasons((r) => {
+          const next = { ...r };
+          delete next[avenue];
+          return next;
+        });
+        return prev.filter((a) => a !== avenue);
+      }
+      if (prev.length >= 2) return prev; // already at max
+      return [...prev, avenue];
+    });
+  }
+
+  function updateReason(avenue: string, value: string) {
+    setReasons((r) => ({ ...r, [avenue]: value }));
   }
 
   function formatPhoneDisplay(digits: string) {
@@ -60,7 +76,12 @@ export default function VolunteerForm() {
     if (!form.degree_pathway) return setError("Please select your degree pathway.");
     if (!form.current_year) return setError("Please select your current year.");
     if (selectedAvenues.length === 0) return setError("Please select at least one volunteering avenue.");
-    if (!form.suitability_reason.trim()) return setError("Please tell us why you'd be a good fit.");
+
+    for (const avenue of selectedAvenues) {
+      if (!reasons[avenue]?.trim()) {
+        return setError(`Please describe why you're a good fit for ${avenue}.`);
+      }
+    }
 
     setSubmitting(true);
     const supabase = createClient();
@@ -70,7 +91,7 @@ export default function VolunteerForm() {
       degree_pathway: form.degree_pathway,
       current_year: form.current_year,
       volunteering_avenues: selectedAvenues,
-      suitability_reason: form.suitability_reason.trim(),
+      suitability_reasons: reasons,
     });
     setSubmitting(false);
 
@@ -93,10 +114,7 @@ export default function VolunteerForm() {
         <p className="text-sm" style={{ color: "rgba(245,240,232,0.5)" }}>
           Thank you for your interest in volunteering for Narunthingal &apos;27. We&apos;ll be in touch.
         </p>
-        <button
-          onClick={() => router.push("/")}
-          className="btn-secondary mt-2"
-        >
+        <button onClick={() => router.push("/")} className="btn-secondary mt-2">
           Back to Home
         </button>
       </div>
@@ -105,6 +123,7 @@ export default function VolunteerForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {/* Personal Details */}
       <div className="card flex flex-col gap-5">
         <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
           Personal Details
@@ -112,12 +131,7 @@ export default function VolunteerForm() {
 
         <div className="flex flex-col gap-1.5">
           <label className="label">Full Name <span style={{ color: "#D4A017" }}>*</span></label>
-          <input
-            className="input"
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
-            placeholder="Enter your full name"
-          />
+          <input className="input" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Enter your full name" />
         </div>
 
         <div className="flex flex-col gap-1.5">
@@ -144,34 +158,46 @@ export default function VolunteerForm() {
           <label className="label">Current Year <span style={{ color: "#D4A017" }}>*</span></label>
           <select className="input" value={form.current_year} onChange={(e) => update("current_year", e.target.value)}>
             <option value="">Select your year...</option>
-            {YEARS.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
+            {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
       </div>
 
+      {/* Volunteering Preferences */}
       <div className="card flex flex-col gap-5">
-        <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
-          Volunteering Preferences
-        </h2>
+        <div>
+          <h2 className="font-semibold pb-3" style={{ color: "#f5f0e8", borderBottom: "1px solid rgba(212,160,23,0.2)" }}>
+            Volunteering Preferences
+          </h2>
+        </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="label">Avenues you&apos;d like to volunteer for <span style={{ color: "#D4A017" }}>*</span></label>
-          <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>Select all that apply</p>
+          <label className="label">
+            Avenues you&apos;d like to volunteer for <span style={{ color: "#D4A017" }}>*</span>
+          </label>
+          <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>
+            Select up to 2 — you must explain your fit for each one selected
+          </p>
           <div className="grid grid-cols-2 gap-2 mt-1">
             {AVENUES.map((avenue) => {
               const checked = selectedAvenues.includes(avenue);
+              const maxed = !checked && selectedAvenues.length >= 2;
               return (
                 <button
                   key={avenue}
                   type="button"
                   onClick={() => toggleAvenue(avenue)}
+                  disabled={maxed}
                   className="rounded-xl px-4 py-3 text-sm font-medium text-left transition-all"
                   style={checked ? {
                     background: "rgba(212,160,23,0.15)",
                     border: "1px solid rgba(212,160,23,0.45)",
                     color: "#D4A017",
+                  } : maxed ? {
+                    background: "rgba(255,255,255,0.02)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                    color: "rgba(245,240,232,0.25)",
+                    cursor: "not-allowed",
                   } : {
                     background: "rgba(255,255,255,0.03)",
                     border: "1px solid rgba(255,255,255,0.08)",
@@ -185,17 +211,23 @@ export default function VolunteerForm() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label className="label">Why are you a good fit? <span style={{ color: "#D4A017" }}>*</span></label>
-          <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>Keep it brief — 2–3 sentences</p>
-          <textarea
-            className="input resize-none"
-            rows={4}
-            value={form.suitability_reason}
-            onChange={(e) => update("suitability_reason", e.target.value)}
-            placeholder="Briefly describe why you'd be a great volunteer..."
-          />
-        </div>
+        {/* Per-avenue reason textareas — appear when avenue is selected */}
+        {selectedAvenues.map((avenue) => (
+          <div key={avenue} className="flex flex-col gap-1.5">
+            <label className="label">
+              Why are you a good fit for <span style={{ color: "#D4A017" }}>{avenue}</span>?{" "}
+              <span style={{ color: "#D4A017" }}>*</span>
+            </label>
+            <p className="text-xs -mt-0.5" style={{ color: "rgba(212,160,23,0.5)" }}>Keep it brief — 2–3 sentences</p>
+            <textarea
+              className="input resize-none"
+              rows={3}
+              value={reasons[avenue] ?? ""}
+              onChange={(e) => updateReason(avenue, e.target.value)}
+              placeholder={`Why would you be a great fit for ${avenue}?`}
+            />
+          </div>
+        ))}
       </div>
 
       {error && (
