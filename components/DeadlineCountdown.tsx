@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-// Wednesday 29 Oct 2026 00:00:00 Sri Lanka time (UTC+5:30)
-const DEADLINE = new Date("2026-10-28T18:30:00Z");
+// Wednesday 28 Oct 2026 20:00:00 Sri Lanka time (UTC+5:30)
+const DEADLINE = new Date("2026-10-28T14:30:00Z");
 
 function getTimeLeft() {
   const diff = DEADLINE.getTime() - Date.now();
@@ -22,7 +22,13 @@ export default function DeadlineCountdown() {
     return () => clearInterval(id);
   }, []);
 
-  if (!timeLeft) return null;
+  if (!timeLeft) return (
+    <div className="flex items-center justify-center mt-3">
+      <span className="text-xs uppercase tracking-widest px-3 py-1 rounded-full" style={{ color: "rgba(252,165,165,0.8)", background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.25)" }}>
+        Applications closed
+      </span>
+    </div>
+  );
 
   const { hours, mins, secs } = timeLeft;
 
