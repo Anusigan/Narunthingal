@@ -83,10 +83,10 @@ export default async function AdminVolunteersPage() {
                   {(v.volunteering_avenues as string[]).map((avenue: string) => (
                     <div key={avenue}>
                       <p className="text-xs uppercase tracking-wide mb-1" style={{ color: "rgba(212,160,23,0.5)" }}>
-                        Why suitable — {avenue}
+                        Why suitable: {avenue}
                       </p>
                       <p className="text-sm" style={{ color: "rgba(245,240,232,0.7)" }}>
-                        {(v.suitability_reasons as Record<string, string>)?.[avenue] ?? "—"}
+                        {(v.suitability_reasons as Record<string, string>)?.[avenue] ?? "Not provided"}
                       </p>
                     </div>
                   ))}

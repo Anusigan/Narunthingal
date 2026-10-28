@@ -143,7 +143,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
           <div className="card w-full max-w-lg" style={{ borderColor: "rgba(212,160,23,0.4)" }}>
             <h2 className="text-lg font-semibold text-white mb-1">Release Results</h2>
             <p className="text-sm mb-5" style={{ color: "rgba(245,240,232,0.45)" }}>
-              {releasingEvent.title} — assign each winner a position. The live screen
+              {releasingEvent.title}: assign each winner a position. The live screen
               reveals them from the lowest position up to the President.
             </p>
 
@@ -154,7 +154,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                   .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0))
                   .map((c, i) => (
                     <span key={c}>
-                      {i + 1}. {c} — {counts[c] ?? 0} vote{(counts[c] ?? 0) !== 1 ? "s" : ""}
+                      {i + 1}. {c}: {counts[c] ?? 0} vote{(counts[c] ?? 0) !== 1 ? "s" : ""}
                     </span>
                   ));
               })()}
@@ -359,7 +359,7 @@ export default function VotingManager({ userId, events, votes }: Props) {
                 )}
                 {isExpired && event.is_active && (
                   <p className="text-xs mt-0.5" style={{ color: "#f87171" }}>
-                    Duration expired — deactivate to close voting.
+                    Duration expired. Deactivate to close voting.
                   </p>
                 )}
               </div>
