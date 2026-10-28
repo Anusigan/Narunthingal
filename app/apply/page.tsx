@@ -4,8 +4,8 @@ import Navbar from "@/components/Navbar";
 import ApplyForm from "./ApplyForm";
 import { isAdminAsync } from "@/lib/admin";
 
-// Extended briefly — closes 28 Oct 2026 20:35 Sri Lanka time (UTC+5:30)
-const APPLICATION_DEADLINE = new Date("2026-10-28T15:05:00Z");
+// Wednesday 28 Oct 2026 20:00 Sri Lanka time (UTC+5:30)
+const APPLICATION_DEADLINE = new Date("2026-10-28T14:30:00Z");
 
 export default async function ApplyPage() {
   const supabase = await createClient();
