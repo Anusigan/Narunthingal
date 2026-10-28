@@ -65,16 +65,17 @@ export default function Navbar({ email, name, isAdmin: isAdminProp }: NavbarProp
     >
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+        <Link href="/" className="flex items-center gap-2.5 py-1 group shrink-0" onClick={() => setMenuOpen(false)}>
           <Image
-            src="/narunthingal-logo.jpg"
+            src="/narunthingal_sketched_logo.png"
             alt="Narunthingal"
-            width={30}
-            height={30}
-            className="rounded-md shrink-0"
+            width={140}
+            height={40}
+            className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105 drop-shadow-[0_2px_10px_rgba(212,160,23,0.35)]"
+            priority
           />
-          <span className="font-bold text-sm sm:text-base uppercase" style={{ color: "#D4A017", letterSpacing: "0.08em" }}>
-            Narunthingal
+          <span className="font-bold text-xs uppercase tracking-widest text-[#D4A017] hidden sm:inline pl-1 border-l border-[rgba(212,160,23,0.25)]">
+            &apos;27
           </span>
           {admin && (
             <span

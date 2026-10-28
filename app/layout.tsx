@@ -9,7 +9,14 @@ export const metadata: Metadata = {
   title: "Narunthingal Portal",
   description:
     "Official portal for Narunthingal organizing committee applications and voting. IIT students only.",
-  icons: { icon: "/narunthingal-logo.jpg" },
+  icons: {
+    icon: [
+      { url: "/narunthingal_sketched_logo.png" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/narunthingal_sketched_logo.png",
+    apple: "/narunthingal_sketched_logo.png",
+  },
 };
 
 export default function RootLayout({
