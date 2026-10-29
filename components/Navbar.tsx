@@ -45,7 +45,7 @@ export default function Navbar({ email, name, isAdmin: isAdminProp }: NavbarProp
     ...(admin
       ? [
           { href: "/admin/candidates", label: "Candidates" },
-          { href: "/admin/selections", label: "Selections" },
+          // { href: "/admin/selections", label: "Selections" }, // hidden — restore when needed
           { href: "/admin/voting", label: "Manage Voting" },
           { href: "/admin/admins", label: "Manage Admins" },
           { href: "/admin/analytics", label: "Analytics" },

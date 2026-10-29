@@ -157,7 +157,7 @@ export default async function HomePage() {
 
           {/* Admin — occupies full grid width, then splits into its own 3-col row */}
           {admin && (
-            <div className="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin: Candidates</h2>
@@ -170,6 +170,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
+              {/* Admin: Selections card hidden — restore when needed
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
                   <h2 className="text-lg font-semibold text-white mb-1">Admin: Selections</h2>
@@ -181,6 +182,7 @@ export default async function HomePage() {
                   Manage Selections
                 </Link>
               </div>
+              */}
 
               <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
                 <div>
