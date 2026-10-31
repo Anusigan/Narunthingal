@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import { isAdminAsync } from "@/lib/admin";
+import { isAdminAsync, isSuperAdmin } from "@/lib/admin";
 import DeadlineCountdown from "@/components/DeadlineCountdown";
 
 export default async function HomePage() {
@@ -21,6 +21,7 @@ export default async function HomePage() {
   const email = user.email!;
   const name = user.user_metadata?.full_name as string | undefined;
   const admin = await isAdminAsync(email, supabase);
+  const superAdmin = isSuperAdmin(email);
 
   // Wednesday 28 Oct 2026 20:00 Sri Lanka time (UTC+5:30)
   const APPLICATION_DEADLINE = new Date("2026-10-28T14:30:00Z");
@@ -196,17 +197,19 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
-                <div>
-                  <h2 className="text-lg font-semibold text-white mb-1">Admin: Access</h2>
-                  <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
-                    Add or remove admin access for other IIT email addresses.
-                  </p>
+              {superAdmin && (
+                <div className="card flex flex-col gap-4" style={{ borderColor: "rgba(212,160,23,0.3)" }}>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white mb-1">Admin: Access</h2>
+                    <p className="text-sm" style={{ color: "rgba(245,240,232,0.45)" }}>
+                      Add or remove admin access for other IIT email addresses.
+                    </p>
+                  </div>
+                  <Link href="/admin/admins" className="btn-secondary text-center mt-auto block">
+                    Manage Admins
+                  </Link>
                 </div>
-                <Link href="/admin/admins" className="btn-secondary text-center mt-auto block">
-                  Manage Admins
-                </Link>
-              </div>
+              )}
             </div>
           )}
         </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { isAdmin } from "@/lib/admin";
+import { isAdmin, SUPER_ADMIN_EMAIL } from "@/lib/admin";
 import { useEffect, useState } from "react";
 import { startPresence, stopPresence } from "@/lib/presence";
 import Image from "next/image";
@@ -12,14 +12,16 @@ interface NavbarProps {
   email: string;
   name?: string | null;
   isAdmin?: boolean;
+  isSuperAdmin?: boolean;
 }
 
-export default function Navbar({ email, name, isAdmin: isAdminProp }: NavbarProps) {
+export default function Navbar({ email, name, isAdmin: isAdminProp, isSuperAdmin: isSuperAdminProp }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [signing, setSigning] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const admin = isAdminProp ?? isAdmin(email);
+  const superAdmin = isSuperAdminProp ?? (email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase());
 
   // Announce this signed-in user on the shared presence channel
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function Navbar({ email, name, isAdmin: isAdminProp }: NavbarProp
           { href: "/admin/candidates", label: "Candidates" },
           // { href: "/admin/selections", label: "Selections" }, // hidden — restore when needed
           { href: "/admin/voting", label: "Manage Voting" },
-          { href: "/admin/admins", label: "Manage Admins" },
+          ...(superAdmin ? [{ href: "/admin/admins", label: "Manage Admins" }] : []),
           { href: "/admin/analytics", label: "Analytics" },
         ]
       : []),
