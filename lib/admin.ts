@@ -6,6 +6,14 @@ export const ADMIN_EMAILS: string[] = [
   "sivananthan.20230297@iit.ac.lk",
 ];
 
+// Only this account can manage the admins list
+export const SUPER_ADMIN_EMAIL = "sivananthan.20230297@iit.ac.lk";
+
+export function isSuperAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+}
+
 export function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false;
   return ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(

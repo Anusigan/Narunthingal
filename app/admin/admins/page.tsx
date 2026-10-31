@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Unauthorized from "@/components/Unauthorized";
-import { isAdminAsync } from "@/lib/admin";
+import { isAdminAsync, isSuperAdmin } from "@/lib/admin";
 import Navbar from "@/components/Navbar";
 import AdminsManager from "./AdminsManager";
 
@@ -13,6 +13,7 @@ export default async function AdminsPage() {
 
   if (!user) redirect("/login");
   if (!(await isAdminAsync(user.email!, supabase))) return <Unauthorized />;
+  if (!isSuperAdmin(user.email)) return <Unauthorized />;
 
   const { data: admins } = await supabase
     .from("admins")
