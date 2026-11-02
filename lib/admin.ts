@@ -9,6 +9,17 @@ export const ADMIN_EMAILS: string[] = [
 // Only this account can manage the admins list
 export const SUPER_ADMIN_EMAIL = "sivananthan.20230297@iit.ac.lk";
 
+// Accounts that can see the Selections feature
+export const SELECTIONS_EMAILS = [
+  "sivananthan.20230297@iit.ac.lk",
+  "saranujan.20221857@iit.ac.lk",
+];
+
+export function canViewSelections(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return SELECTIONS_EMAILS.map((e) => e.toLowerCase()).includes(email.toLowerCase());
+}
+
 export function isSuperAdmin(email: string | null | undefined): boolean {
   if (!email) return false;
   return email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
