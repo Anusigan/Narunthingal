@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { isAdmin, SUPER_ADMIN_EMAIL } from "@/lib/admin";
+import { isAdmin, SUPER_ADMIN_EMAIL, canViewSelections } from "@/lib/admin";
 import { useEffect, useState } from "react";
 import { startPresence, stopPresence } from "@/lib/presence";
 import Image from "next/image";
@@ -22,6 +22,7 @@ export default function Navbar({ email, name, isAdmin: isAdminProp, isSuperAdmin
   const [menuOpen, setMenuOpen] = useState(false);
   const admin = isAdminProp ?? isAdmin(email);
   const superAdmin = isSuperAdminProp ?? (email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase());
+  const showSelections = canViewSelections(email);
 
   // Announce this signed-in user on the shared presence channel
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function Navbar({ email, name, isAdmin: isAdminProp, isSuperAdmin
     ...(admin
       ? [
           { href: "/admin/candidates", label: "Candidates" },
-          // { href: "/admin/selections", label: "Selections" }, // hidden — restore when needed
+          ...(showSelections ? [{ href: "/admin/selections", label: "Selections" }] : []),
           { href: "/admin/voting", label: "Manage Voting" },
           ...(superAdmin ? [{ href: "/admin/admins", label: "Manage Admins" }] : []),
           { href: "/admin/analytics", label: "Analytics" },
