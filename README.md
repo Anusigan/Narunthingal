@@ -1,4 +1,4 @@
-#Narunthingal Portal
+Narunthingal Portal
 
 Official portal for the **Narunthingal** organizing committee — applications, voting, and administration.
 
