@@ -126,35 +126,19 @@ export default async function HomePage() {
                 Participate in active committee votes. Your IIT login ensures one vote per person.
               </p>
             </div>
-            {admin && (voteCount ?? 0) > 0 ? (
-              <div className="flex flex-col gap-3">
-                <div
-                  className="rounded-lg px-4 py-3 text-sm"
-                  style={{ background: "rgba(212,160,23,0.1)", border: "1px solid rgba(212,160,23,0.25)" }}
-                >
-                  <p className="font-medium" style={{ color: "#D4A017" }}>
-                    {voteCount} active vote{voteCount !== 1 ? "s" : ""}
-                  </p>
-                </div>
-                <Link href="/vote" className="btn-primary text-center block">
-                  Go to Voting
-                </Link>
-              </div>
-            ) : admin ? (
+            {admin && (voteCount ?? 0) > 0 && (
               <div
                 className="rounded-lg px-4 py-3 text-sm"
-                style={{ color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                style={{ background: "rgba(212,160,23,0.1)", border: "1px solid rgba(212,160,23,0.25)" }}
               >
-                No active votes right now. Check back later.
-              </div>
-            ) : (
-              <div
-                className="rounded-lg px-4 py-3 text-sm"
-                style={{ color: "rgba(245,240,232,0.4)", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                Voting opens soon. Check back later.
+                <p className="font-medium" style={{ color: "#D4A017" }}>
+                  {voteCount} active vote{voteCount !== 1 ? "s" : ""}
+                </p>
               </div>
             )}
+            <Link href="/vote" className="btn-primary text-center mt-auto block">
+              Vote Now
+            </Link>
           </div>
 
           {/* Admin — occupies full grid width, then splits into its own 3-col row */}
